@@ -10,7 +10,7 @@ import {
     YNames
 } from "../rectanglePoints/enums";
 import {I_Coordinates, I_Rectangle} from "./types";
-import {XYRange} from "../range/XYRange";
+import XYRange from "../range/XYRange";
 import {I_XYRangeMethods} from "../range/types";
 import {CENTER_POINT, CORNERS, MIDPOINTS, PointNameTuple} from "../rectanglePoints/name-tuples";
 import {I_Point, I_PointName, I_RectanglePoint} from "../rectanglePoints/types";

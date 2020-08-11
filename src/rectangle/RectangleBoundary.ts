@@ -10,7 +10,7 @@ import {isXName} from "../rectanglePoints/booleans";
  * copy-and-pasting from BoundedRectangle for now
  * not sure how these will relate in the future
  */
-export class RectangleBoundary implements I_RangeMethods<ImmutableRectangle> {
+export default class RectangleBoundary implements I_RangeMethods<ImmutableRectangle> {
 
     public readonly boundary: I_RangeMethods<I_Point>;
 

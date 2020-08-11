@@ -1,7 +1,6 @@
 import ScaleCalculator from "./ScalableCalculator";
 import {I_ScalableObject, Limits} from "./types";
 import {I_NumericRange} from "../range/types";
-import {I_Sized} from "../sized/types";
 
 /**
  * create a clone of an object which is scaled to size
@@ -29,7 +28,7 @@ export interface ApplyScaledValues<Scalable extends string, OT extends Record<Sc
     (values: Required<Pick<OT, Scalable>>, original: OT): OT,
 }
 
-export class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements I_ScalableObject<Scalable, OT> {
+export default class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements I_ScalableObject<Scalable, OT> {
     private readonly calculator: ScaleCalculator<Scalable, OT>;
     private readonly original: OT;
     private readonly apply: ApplyScaledValues<Scalable, OT>;
@@ -72,15 +71,3 @@ export class ScaledVersionCreator<Scalable extends string, OT extends Record<Sca
         return this.scale(this.calculator.calcScaleToCover(propertyMinimums));
     }
 }
-
-type WH = 'width' | 'height';
-
-export class ScaledObjectCreator<OT extends I_Sized> extends ScaledVersionCreator<WH, OT> {
-    constructor(object: OT, applyScaledValues?: ApplyScaledValues<WH, OT>) {
-        super(['width', 'height'], object, applyScaledValues);
-    }
-}
-
-/*export const ScaledObjectCreator = <OT extends Sized>(object: OT, applyScaledValues?: ApplyScaledValues<'width' | 'height', OT & StringIndexed>) => {
-  return new ScaledVersionCreator<'width' | 'height', OT>(['width', 'height'], object, applyScaledValues);
-};*/

@@ -12,7 +12,7 @@ import {isXName} from "../rectanglePoints/booleans";
  * but can calculate cover by switching rectangle and boundary
  */
 
-export class BoundedRectangle {
+export default class BoundedRectangle {
     private readonly rectangle: ImmutableRectangle;
     private readonly boundary: I_XYRangeMethods;
 

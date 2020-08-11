@@ -13,7 +13,7 @@ import {I_Sized} from "./types";
  * but if none is provided it will be computed from the largest size, assuming that thumbnails
  * may use a different ratio but the full size is the "true" ratio
  */
-export class SizeFinder<T extends I_Sized> {
+export default class SizeFinder<T extends I_Sized> {
     public readonly aspectRatio: number;
     public readonly sizes: Record<string | number, T>;
 
@@ -104,5 +104,3 @@ export class SizeFinder<T extends I_Sized> {
         return this.getCoverSize({height});
     };
 }
-
-export default SizeFinder;

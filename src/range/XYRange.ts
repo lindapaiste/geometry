@@ -8,7 +8,7 @@ import {I_Point} from "../rectanglePoints/types";
  * all Rectangles are XYRanges, but not all XYRanges are Rectangles
  * it is only a rectangle if it is closed on all four sides
  */
-export class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYRangeMethods {
+export default class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYRangeMethods {
 
     /**
      * not sure if there is much purpose in storing the x1s,

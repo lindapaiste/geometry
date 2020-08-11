@@ -1,4 +1,4 @@
-import {ScaledVersionCreator} from "../scaling/ScaledVersion";
+import ScaledVersionCreator from "../scaling/ScaledVersion";
 import {I_Sized} from "./types";
 
 /**

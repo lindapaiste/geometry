@@ -1,5 +1,5 @@
 import {I_Sized, PropHeight, PropWidth} from "./types";
-import {ScaledObjectCreator} from "../scaling/ScaledVersion";
+import {ScaledObjectCreator} from "../scaling/ScaledObject";
 
 
 export const getAspectRatio = (obj: I_Sized): number | undefined =>
