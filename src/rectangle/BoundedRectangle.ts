@@ -1,7 +1,8 @@
 import ImmutableRectangle from "./ImmutableRectangle";
-import {isXName, midpointSide, XNames, YNames} from "../rectanglePoints/enums";
+import {midpointSide, XNames, YNames} from "../rectanglePoints/enums";
 import {I_XYRangeMethods} from "../range/types";
 import {I_PointName, I_RectanglePoint} from "../rectanglePoints/types";
+import {isXName} from "../rectanglePoints/booleans";
 
 /**
  * uses the internal rectangle's functions to execute the move,

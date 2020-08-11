@@ -1,4 +1,4 @@
-import NumericRange from './NumericRange';
+import NumericRange from '../src/range/NumericRange';
 
 
 test('range (0, 100) should contain 50', () => {

@@ -5,10 +5,10 @@ import {I_RangeMethods} from "../range/types";
  * this class can handle scaling of any values, not just height and width
  *
  * if given an object with a scale() property, can execute the scaling
- * but if just given a set of properties, an still compute the scale
+ * but if just given a set of properties, can still compute the scale
  * so break into two classes
  */
-export class ScalableBaseCalc<Scalable extends string> {
+export default class ScalableBaseCalc<Scalable extends string> {
     /**
      * array of strings of the properties which need to be kept in scale
      */
@@ -96,11 +96,9 @@ export class ScalableBaseCalc<Scalable extends string> {
     /**
      * logic shared between maximizing and minimizing
      */
-    private _getScalesFromLimits(limits: Limits<Scalable>): number[] {
+    private _getScalesFromLimits(limits: Partial<Record<Scalable, number>>): number[] {
         return Object.keys(limits).map(
             propertyName => this.calcScalePropertyToValue(propertyName as Scalable, limits[propertyName])
         );
     }
 }
-
-export default ScalableBase;

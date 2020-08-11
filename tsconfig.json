@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
-    "sourceMap": true
+    "target": "es6",
+    "sourceMap": true,
+    "noEmit": true,
+    "downlevelIteration": false
   },
   "lib": ["es6", "dom", "es2017"],
   "exclude": [

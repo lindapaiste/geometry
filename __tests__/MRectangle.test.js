@@ -1,4 +1,4 @@
-import MutableRectangle from './MutableRectangle';
+import MutableRectangle from '../src/rectangle/MutableRectangle';
 
 const pure = (Rectangle) => {
     const {x1,y1,x2,y2} = Rectangle;

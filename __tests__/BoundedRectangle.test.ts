@@ -1,7 +1,7 @@
-import ImmutableRectangle from "./ImmutableRectangle";
-import {BoundedRectangle} from "./BoundedRectangle";
-import {SIDES} from "../rectanglePoints/enums";
-import {toProps} from "../../../../../image-geometry/src/image-editing/crop/useControlledRectangle.test";
+import ImmutableRectangle from "../src/rectangle/ImmutableRectangle";
+import {BoundedRectangle} from "../src/rectangle/BoundedRectangle";
+import {SIDES} from "../src/rectanglePoints/enums";
+import {toRectangleProps} from "../src/rectangle/util";
 
 const original = new ImmutableRectangle({
     x: 100,
@@ -19,7 +19,7 @@ const boundary = new ImmutableRectangle({
 
 const bounded = new BoundedRectangle(original, boundary);
 
-test( "is contained when shifting outside of boundaries", () => {
+test("is contained when shifting outside of boundaries", () => {
 
     const movedRight = bounded.shiftToPoint({
         xName: SIDES.RIGHT,
@@ -29,7 +29,7 @@ test( "is contained when shifting outside of boundaries", () => {
     });
 
     //should move as much as it can along x
-    expect(toProps(movedRight)).toEqual({
+    expect(toRectangleProps(movedRight)).toEqual({
         x: 200,
         y: 100,
         width: 200,
@@ -44,7 +44,7 @@ test( "is contained when shifting outside of boundaries", () => {
     });
 
     //should move as much as it can along x
-    expect(toProps(movedBoth)).toEqual({
+    expect(toRectangleProps(movedBoth)).toEqual({
         x: 0,
         y: 0,
         width: 200,

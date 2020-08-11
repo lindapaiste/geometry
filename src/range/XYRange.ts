@@ -1,7 +1,6 @@
 import {NumericRange} from "./NumericRange";
 import {I_Coordinates} from "../rectangle/types";
 import {I_DefinedXYRange, I_NumericRange, I_XYRange, I_XYRangeMethods} from "./types";
-import ImmutableRectangle from "../rectangle/ImmutableRectangle";
 import {I_Point} from "../rectanglePoints/types";
 
 /**
@@ -72,16 +71,5 @@ export class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYRangeMeth
     isDefined = (): this is this & Required<I_Coordinates> & I_DefinedXYRange => {
         return this.rangeX.isDefined() && this.rangeY.isDefined();
     }
-
-    /**
-     * rectangles actually can be constructed from partial because it has default values, but that is silly
-     *
-     * inferred return doesn't work: this extends Required<I_Coordinates> & I_DefinedXYRange ? I_Rectangle : null
-     * so might be better to handle externally
-     */
-    toRectangle = (): ImmutableRectangle | null => {
-        return this.isDefined() ? ImmutableRectangle.fromCoordinates(this) : null;
-    }
-
 
 }

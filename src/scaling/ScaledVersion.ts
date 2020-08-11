@@ -1,5 +1,4 @@
 import ScaleCalculator from "./ScalableCalculator";
-import {NumericRange} from "../range/NumericRange";
 import {I_ScalableObject, Limits} from "./types";
 import {I_NumericRange} from "../range/types";
 import {I_Sized} from "../sized/types";
@@ -7,11 +6,14 @@ import {I_Sized} from "../sized/types";
 /**
  * create a clone of an object which is scaled to size
  * do not mutate the object
- * can override default params for custom  implementation rather than extending
+ * can override default params for custom implementation rather than extending
  */
 
 /**
- * works for any plain JS object, but not for classes
+ * previously passed in an "applyScaledValues" method through constructor
+ * applyScaledValues: ApplyScaledValues<Scalable, OT> = defaultApplyScaledValues
+ *
+ * default logic works for any plain JS object, but not for classes
  */
 export const defaultApplyScaledValues = <Scalable extends string, OT extends Record<Scalable, number>>(values: Required<Pick<OT, Scalable>>, original: OT): OT => {
     return {
@@ -27,11 +29,15 @@ export interface ApplyScaledValues<Scalable extends string, OT extends Record<Sc
     (values: Required<Pick<OT, Scalable>>, original: OT): OT,
 }
 
-export class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements I_ScalableObject<Scalable, OT>{
+export class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements I_ScalableObject<Scalable, OT> {
     private readonly calculator: ScaleCalculator<Scalable, OT>;
     private readonly original: OT;
     private readonly apply: ApplyScaledValues<Scalable, OT>;
 
+
+    /**
+     * construct by passing the names of the properties which are scalable and the object
+     */
     constructor(scalableProperties: Scalable[], object: OT, applyScaledValues: ApplyScaledValues<Scalable, OT> = defaultApplyScaledValues) {
         this.calculator = new ScaleCalculator<Scalable, OT>(scalableProperties, object);
         this.original = object;
@@ -58,11 +64,11 @@ export class ScaledVersionCreator<Scalable extends string, OT extends Record<Sca
      * SCALE ON MULTIPLE DIMENSIONS
      */
 
-    scaleToFit(propertyMaximums: Limits<Scalable, OT>): OT {
+    scaleToFit(propertyMaximums: Limits<Scalable>): OT {
         return this.scale(this.calculator.calcScaleToFit(propertyMaximums));
     }
 
-    scaleToCover(propertyMinimums: Limits<Scalable, OT>): OT {
+    scaleToCover(propertyMinimums: Limits<Scalable>): OT {
         return this.scale(this.calculator.calcScaleToCover(propertyMinimums));
     }
 }

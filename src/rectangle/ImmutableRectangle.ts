@@ -1,10 +1,8 @@
-import RectanglePoint, {getOppositeName} from '../rectanglePoints/RectanglePoint';
+import RectanglePoint from '../rectanglePoints/RectanglePoint';
 import {
     CENTERS,
     I_Center,
     I_Midpoint,
-    isCenter,
-    isMidpoint,
     midpointSide,
     sideMidpoint,
     SIDES,
@@ -17,6 +15,8 @@ import {I_XYRangeMethods} from "../range/types";
 import {CENTER_POINT, CORNERS, MIDPOINTS, PointNameTuple} from "../rectanglePoints/name-tuples";
 import {I_Point, I_PointName, I_RectanglePoint} from "../rectanglePoints/types";
 import {I_Sized} from "../sized/types";
+import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
+import {isCenter, isMidpoint} from "../rectanglePoints/booleans";
 
 /**
  * has all of the same editing functions, but always returns a new object
@@ -35,6 +35,8 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
     public readonly x2: number;
     public readonly y1: number;
     public readonly y2: number;
+
+    public static readonly scalableProperties = ['height', 'width'];
 
 //----------------------------CREATION--------------------------//
 
@@ -265,7 +267,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * for example, scale x2 to 500 will change the width and height but preserve x1
      */
     scaleToSide = (value: number, side: SIDES, fixedPoint?: I_PointName): ImmutableRectangle => {
-        const oppositeSideName = RectanglePoint.oppositeName(side);
+        const oppositeSideName = oppositeName(side);
         const oppositeValue = this[oppositeSideName];
         const scale = Math.abs(value - oppositeValue) / Math.abs(this[side] - oppositeValue);
         const fixed = fixedPoint || this.getPoint(sideMidpoint(side));
@@ -423,7 +425,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * @returns {RectanglePoint}
      */
     getOppositePoint = (point: I_RectanglePoint): RectanglePoint => {
-        return this.getPoint(getOppositeName(point));
+        return this.getPoint(oppositePointName(point));
     };
 
 //-------------------------CONTAINED VALUES--------------------------//
