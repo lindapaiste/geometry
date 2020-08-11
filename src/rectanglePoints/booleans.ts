@@ -1,9 +1,9 @@
-import {I_PointName} from "./types";
-import {CENTERS, I_Center, I_Corner, I_Midpoint, SIDES, XNames, YNames} from "./enums";
+import {IPointName} from "./types";
+import {CenterPoint, CornerPoint, MidPoint, XNames, YNames} from "./enums";
 
-const XNAMES = [SIDES.LEFT, SIDES.RIGHT, CENTERS.X];
+const XNAMES = ['x1', 'x2', 'xmid'];
 
-const YNAMES = [SIDES.TOP, SIDES.BOTTOM, CENTERS.Y];
+const YNAMES = ['y1', 'y2', 'ymid'];
 
 export const isXName = (name: XNames | YNames): name is XNames => {
     return XNAMES.includes(name);
@@ -13,31 +13,31 @@ export const isYName = (name: XNames | YNames): name is XNames => {
     return YNAMES.includes(name);
 }
 
-export const isCenterX = (point: I_PointName): point is I_PointName & { xName: typeof CENTERS.X } => {
-    return point.xName === CENTERS.X
+export const isCenterX = (point: IPointName): point is IPointName & { xName: 'xmid' } => {
+    return point.xName === 'xmid';
 }
 
-export const isCenterY = (point: I_PointName): point is I_PointName & { yName: typeof CENTERS.Y } => {
-    return point.yName === CENTERS.Y
+export const isCenterY = (point: IPointName): point is IPointName & { yName: 'ymid' } => {
+    return point.yName === 'ymid';
 }
 
-export const isCenter = (point: I_PointName): point is I_Center => {
+export const isCenter = (point: IPointName): point is CenterPoint => {
     return isCenterX(point) && isCenterY(point);
 }
 
-export const isCorner = (point: I_PointName): point is I_Corner => {
+export const isCorner = (point: IPointName): point is CornerPoint => {
     return !isCenterX(point) && !isCenterY(point);
 }
 
-export const isMidpoint = (point: I_PointName): point is I_Midpoint => {
-    //want one but not both sides to be a center
+export const isMidpoint = (point: IPointName): point is MidPoint => {
+    // want one but not both sides to be a center
     return (isCenterX(point) || isCenterY(point)) && !isCenter(point);
 }
 
-export const isPoint = (point: I_PointName | null | undefined): point is I_PointName => {
+export const isPoint = (point: IPointName | null | undefined): point is IPointName => {
     return point !== null && point !== undefined;
 }
 
-export const isSamePoint = (a: I_PointName | null | undefined, b: I_PointName | null | undefined): boolean => {
+export const isSamePoint = (a: IPointName | null | undefined, b: IPointName | null | undefined): boolean => {
     return isPoint(a) && isPoint(b) && a.xName === b.xName && a.yName === b.yName;
 }

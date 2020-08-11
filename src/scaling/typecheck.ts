@@ -1,5 +1,5 @@
-import {I_Scalable} from "./types";
+import {IScalable} from "./types";
 
-export const hasScaleMethod = <T extends Partial<I_Scalable>>(object: T): object is T & I_Scalable => {
+export const hasScaleMethod = <T extends Partial<IScalable>>(object: T): object is T & IScalable => {
     return 'scale' in object && typeof object.scale === "function";
 }

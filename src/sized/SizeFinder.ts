@@ -1,5 +1,5 @@
 import {covers, fits, isAspectRatio, returnLarger, returnSmaller} from "./sized-util";
-import {I_Sized} from "./types";
+import {ISized} from "./types";
 
 /**
  * define a generic SizeFinder class which holds either a plain array or a keyed object
@@ -13,7 +13,7 @@ import {I_Sized} from "./types";
  * but if none is provided it will be computed from the largest size, assuming that thumbnails
  * may use a different ratio but the full size is the "true" ratio
  */
-export default class SizeFinder<T extends I_Sized> {
+export default class SizeFinder<T extends ISized> {
     public readonly aspectRatio: number;
     public readonly sizes: Record<string | number, T>;
 
@@ -24,7 +24,7 @@ export default class SizeFinder<T extends I_Sized> {
     constructor(sizes: Record<string | number, T>, aspectRatio: number) {
         this.aspectRatio = aspectRatio;
         this.sizes = sizes;
-        //maybe make sure each size is valid?
+        // maybe make sure each size is valid?
     }
 
     /**
@@ -73,8 +73,8 @@ export default class SizeFinder<T extends I_Sized> {
      * and returns the largest available size if none are large enough to cover
      * aspect ratio does not matter as it will be cut off anyways
      */
-    getCoverSize = (target: Partial<I_Sized>): T => {
-        //not the most efficient because it loops through twice, but it is clean
+    getCoverSize = (target: Partial<ISized>): T => {
+        // not the most efficient because it loops through twice, but it is clean
         const coverSizes = this.sizeArray.filter(covers(target));
         return (coverSizes.length) ? coverSizes.reduce(returnSmaller) : this.getLargestSize();
     }
@@ -84,7 +84,7 @@ export default class SizeFinder<T extends I_Sized> {
      * EITHER the height or the width is larger than the target
      * if only one dimension is defined, want to exceed that dimension, not just exceed the undefined one
      */
-    getContainSize = (target: Partial<I_Sized>): T => {
+    getContainSize = (target: Partial<ISized>): T => {
         const okSizes = this.sizeArray.filter( size => ! fits(target)(size) );
         return (okSizes.length) ? okSizes.reduce(returnSmaller) : this.getLargestSize();
     }

@@ -1,12 +1,12 @@
 import ScaledVersionCreator from "../scaling/ScaledVersion";
-import {I_Sized} from "./types";
+import {ISized} from "./types";
 
 /**
  * SizedImage was previously a class extending ScalableObject
  * refactor into a plain object interface
  */
 
-export interface I_SizedImage extends I_Sized {
+export interface ISizedImage extends ISized {
     width: number;
     height: number;
     source_url: string,
@@ -15,12 +15,12 @@ export interface I_SizedImage extends I_Sized {
 /**
  * can pass parameters with any name and make a SizedImage with the right properties
  */
-export const createSizedImage = ( source_url: string, width: number, height: number): I_SizedImage => ({
+export const createSizedImage = ( src: string, width: number, height: number): ISizedImage => ({
     width,
     height,
-    source_url,
+    source_url: src,
 });
 
 
-export const scaledVersionCreator = ( sizedImage: I_SizedImage ) =>
+export const scaledVersionCreator = ( sizedImage: ISizedImage ) =>
     new ScaledVersionCreator(['width', 'height'], sizedImage);

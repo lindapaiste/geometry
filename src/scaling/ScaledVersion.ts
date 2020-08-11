@@ -1,6 +1,6 @@
 import ScaleCalculator from "./ScalableCalculator";
-import {I_ScalableObject, Limits} from "./types";
-import {I_NumericRange} from "../range/types";
+import {IScalableObject, Limits} from "./types";
+import {INumericRange} from "..";
 
 /**
  * create a clone of an object which is scaled to size
@@ -24,11 +24,9 @@ export const defaultApplyScaledValues = <Scalable extends string, OT extends Rec
 /**
  * function signature to adhere to
  */
-export interface ApplyScaledValues<Scalable extends string, OT extends Record<Scalable, number>> {
-    (values: Required<Pick<OT, Scalable>>, original: OT): OT,
-}
+export type ApplyScaledValues<Scalable extends string, OT extends Record<Scalable, number>> = (values: Required<Pick<OT, Scalable>>, original: OT) => OT
 
-export default class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements I_ScalableObject<Scalable, OT> {
+export default class ScaledVersionCreator<Scalable extends string, OT extends Record<Scalable, number>> implements IScalableObject<Scalable, OT> {
     private readonly calculator: ScaleCalculator<Scalable, OT>;
     private readonly original: OT;
     private readonly apply: ApplyScaledValues<Scalable, OT>;
@@ -55,7 +53,7 @@ export default class ScaledVersionCreator<Scalable extends string, OT extends Re
         return this.scale(this.calculator.calcScalePropertyToValue(propertyName, value));
     }
 
-    scalePropertyToRange(propertyName: Scalable, range: I_NumericRange): OT {
+    scalePropertyToRange(propertyName: Scalable, range: INumericRange): OT {
         return this.scale(this.calculator.calcScalePropertyToRange(propertyName, range));
     }
 

@@ -1,9 +1,12 @@
 /**
+ * phasing out enums in favor of typed strings
+ */
+
+/**
  * Enum for rectangle side names
  * @readonly
  * @enum {string}
  */
-import {isCenterX, isXName} from "./booleans";
 
 export enum SIDES {
     LEFT = 'x1',
@@ -11,9 +14,6 @@ export enum SIDES {
     TOP = 'y1',
     BOTTOM = 'y2',
 }
-
-export type XSides = SIDES.LEFT | SIDES.RIGHT;
-export type YSides = SIDES.TOP | SIDES.BOTTOM;
 
 /**
  * Enum for rectangle center names
@@ -25,38 +25,37 @@ export enum CENTERS {
     Y = 'ymid',
 }
 
-export type XNames = XSides | CENTERS.X;
-export type YNames = YSides | CENTERS.Y;
+// export type XSides = SIDES.LEFT | SIDES.RIGHT;
+// export type YSides = SIDES.TOP | SIDES.BOTTOM;
 
-export interface I_Corner {
+export type XSides = 'x1' | 'x2';
+export type YSides = 'y1' | 'y2';
+export type Side = XSides | YSides;
+
+// export type XNames = XSides | CENTERS.X;
+// export type YNames = YSides | CENTERS.Y;
+
+export type XCenter = 'xmid';
+export type YCenter = 'ymid';
+export type XNames = XSides | XCenter;
+export type YNames = YSides | YCenter;
+
+
+export interface CornerPoint {
     xName: XSides;
     yName: YSides;
 }
 
-export interface I_Center {
-    xName: typeof CENTERS.X;
-    yName: typeof CENTERS.Y;
+export interface CenterPoint {
+    xName: XCenter; // typeof CENTERS.X;
+    yName: YCenter; // typeof CENTERS.Y;
 }
 
-export type I_Midpoint = {
+export type MidPoint = {
     xName: XSides;
-    yName: CENTERS.Y;
+    yName: YCenter; // CENTERS.Y;
 } | {
-    xName: CENTERS.X;
+    xName: XCenter; // CENTERS.X;
     yName: YSides;
-}
-
-export const sideMidpoint = (side: SIDES): I_Midpoint => {
-    return isXName( side ) ? {
-        xName: side,
-        yName: CENTERS.Y
-    } : {
-        xName: CENTERS.X,
-        yName: side,
-    }
-}
-
-export const midpointSide = (point: I_Midpoint): SIDES => {
-    return isCenterX( point ) ? point.yName : point.xName;
 }
 

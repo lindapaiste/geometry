@@ -1,7 +1,7 @@
-export {I_Rectangle, I_Coordinates} from "./rectangle/types";
-export {I_Sized, PropWidth, PropHeight} from "./sized/types";
-export {I_PointName, I_Point, I_RectanglePoint} from "./rectanglePoints/types";
-export {I_NumericRange, I_DefinedXYRange, I_XYRange, I_Range} from "./range/types";
+export {IRectangle, ICoordinates} from "./rectangle/types";
+export {ISized, PropWidth, PropHeight} from "./sized/types";
+export {IPointName, IPoint, IRectanglePoint} from "./rectanglePoints/types";
+export {INumericRange, IDefinedXYRange, IXYRange, IRange} from "./range/types";
 
 export {getScaleToCover, getScaleToFit, getScaleForHeight, getScaleForWidth} from "./scaling/ScaledObject";
 

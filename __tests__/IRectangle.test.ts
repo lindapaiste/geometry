@@ -1,5 +1,4 @@
 import ImmutableRectangle from "../src/rectangle/ImmutableRectangle";
-import {CENTERS, SIDES} from "../src/rectanglePoints/enums";
 import {toRectangleProps} from "../src/rectangle/util";
 
 const initial = new ImmutableRectangle({
@@ -39,8 +38,8 @@ test("can shift in any direction", () => {
 test("can shift a named point to a new value", () => {
 
     expect(toRectangleProps(initial.shiftToPoint({
-        xName: CENTERS.X,
-        yName: SIDES.TOP,
+        xName: 'xmid',
+        yName: 'y1',
         x: 500,
         y: 200
     }))).toEqual({
@@ -64,7 +63,7 @@ test("can scale from any point", () => {
     })
 
     //scale from named point
-    expect(toRectangleProps(initial.scale(.5, {xName: SIDES.RIGHT, yName: SIDES.BOTTOM}))).toEqual({
+    expect(toRectangleProps(initial.scale(.5, {xName: 'x2', yName: 'y2'}))).toEqual({
         x: 250,
         y: 100,
         width: 250,

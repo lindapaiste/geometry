@@ -1,5 +1,5 @@
 import {Limits} from "./types";
-import {I_RangeMethods} from "../range/types";
+import {IRangeMethods} from "../range/types";
 
 /**
  * this class can handle scaling of any values, not just height and width
@@ -65,14 +65,14 @@ export default class ScalableBaseCalc<Scalable extends string> {
      * scale a property such that it falls within the provided range
      * or do nothing ( return scale = 1 ) if the property is anywhere within the range
      */
-    calcScalePropertyToRange(propertyName: Scalable, range: I_RangeMethods<number>): number {
+    calcScalePropertyToRange(propertyName: Scalable, range: IRangeMethods<number>): number {
         const currentValue = this._currentValue(propertyName);
-        //console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently ${currentValue}`);
+        // console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently ${currentValue}`);
         if (!range.contains(currentValue)) {
             const value = range.constrain(currentValue);
             return this.calcScalePropertyToValue(propertyName, value);
         } else {
-            //if value is already acceptable, make no changes
+            // if value is already acceptable, make no changes
             return 1;
         }
     }
@@ -94,11 +94,28 @@ export default class ScalableBaseCalc<Scalable extends string> {
     }
 
     /**
-     * logic shared between maximizing and minimizing
+     * get an array of scales which correspond to the conditions
+     * use min or max in order to meet all conditions, as applicable
      */
-    private _getScalesFromLimits(limits: Partial<Record<Scalable, number>>): number[] {
-        return Object.keys(limits).map(
-            propertyName => this.calcScalePropertyToValue(propertyName as Scalable, limits[propertyName])
-        );
+    private _getScalesFromLimits(limits:  Limits<Scalable>): number[] {
+        /**
+         * limits may have a key be set, but the value undefined
+         * so cannot just loop through keys of limits
+         * must skip over both missing keys and keys with no value
+         */
+        const scales: number[] = [];
+        this.keys.forEach(propertyName => {
+            const limitVal = limits[propertyName];
+            if (typeof limitVal === "number") {
+                scales.push(this.calcScalePropertyToValue(propertyName, limitVal));
+            }
+        });
+        /**
+         * limits can possibly be empty, so use scale = 1 as a fallback to avoid infinity
+         */
+        if (!scales.length) {
+            return [1];
+        }
+        return scales;
     }
 }

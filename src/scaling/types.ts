@@ -1,29 +1,29 @@
-import {I_NumericRange} from "../range/types";
+import {INumericRange} from "..";
 
 /**
  * define a scalable object as one with a scale() method
  * which takes a number and returns itself
  */
-export interface I_Scalable {
+export interface IScalable {
     scale(scale: number): this;
 }
 
 /**
  * a class or object can provide its own scalable properties
  */
-export interface I_ScalableProperties {
+export interface IScalableProperties {
     scalableProperties: string[];
 }
 
 /**
  * interface defines the scale function, but does not know or care about mutate vs. copy
  */
-export interface I_ScalableObject<Scalable extends string, OT extends Record<Scalable, number>> {
+export interface IScalableObject<Scalable extends string, OT extends Record<Scalable, number>> {
     scale(scale: number): OT,
 
     scalePropertyToValue(propertyName: Scalable, value: number): OT,
 
-    scalePropertyToRange(propertyName: Scalable, range: I_NumericRange): OT,
+    scalePropertyToRange(propertyName: Scalable, range: INumericRange): OT,
 
     scaleToFit(propertyMaximums: Limits<Scalable>): OT,
 
@@ -31,6 +31,7 @@ export interface I_ScalableObject<Scalable extends string, OT extends Record<Sca
 }
 
 /**
- * the limits used for scaling an object are a subset of the scalable properties
+ * the limits used for scaling an object are a subset of the scalable properties,
+ * where not all properties have to be defined
  */
-export type Limits<Scalable extends string> = Partial<Record<Scalable, number>>;
+export type Limits<Scalable extends string> = Partial<Record<Scalable, number | undefined>>

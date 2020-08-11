@@ -1,27 +1,18 @@
 import RectanglePoint from '../rectanglePoints/RectanglePoint';
-import {
-    CENTERS,
-    I_Center,
-    I_Midpoint,
-    midpointSide,
-    sideMidpoint,
-    SIDES,
-    XNames,
-    YNames
-} from "../rectanglePoints/enums";
-import {I_Coordinates, I_Rectangle} from "./types";
+import {CENTERS, CenterPoint, MidPoint, Side, SIDES, XNames, YNames} from "../rectanglePoints/enums";
+import {ICoordinates, IRectangle} from "./types";
 import XYRange from "../range/XYRange";
-import {I_XYRangeMethods} from "../range/types";
+import {IXYRangeMethods} from "../range/types";
 import {CENTER_POINT, CORNERS, MIDPOINTS, PointNameTuple} from "../rectanglePoints/name-tuples";
-import {I_Point, I_PointName, I_RectanglePoint} from "../rectanglePoints/types";
-import {I_Sized} from "../sized/types";
+import {IPoint, IPointName, IRectanglePoint, ISized} from "..";
 import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
-import {isCenter, isMidpoint} from "../rectanglePoints/booleans";
+import {isCenter, isCenterX, isMidpoint} from "../rectanglePoints/booleans";
+import {midpointSide, sideMidpoint} from "../rectanglePoints/midpointsSides";
 
 /**
  * has all of the same editing functions, but always returns a new object
  */
-export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinates, I_Rectangle, I_XYRangeMethods {
+export default class ImmutableRectangle implements IPoint, ISized, ICoordinates, IRectangle, IXYRangeMethods {
 
     public readonly range: XYRange;
 
@@ -38,9 +29,9 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
 
     public static readonly scalableProperties = ['height', 'width'];
 
-//----------------------------CREATION--------------------------//
+// ----------------------------CREATION--------------------------//
 
-    constructor(props: Partial<I_Rectangle>) {
+    constructor(props: Partial<IRectangle>) {
         this.x1 = props.x || 0;
         this.y1 = props.y || 0;
         this.x2 = this.x1 + (props.width || 0);
@@ -49,15 +40,15 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
     }
 
     clone(): ImmutableRectangle {
-        //return new this(this.width, this.height, this.x, this.y);
+        // return new this(this.width, this.height, this.x, this.y);
         return new ImmutableRectangle(this);
     };
 
-    static fromObject(object: I_Rectangle): ImmutableRectangle {
+    static fromObject(object: IRectangle): ImmutableRectangle {
         return new this(object);
     }
 
-    static fromCoordinates(object: I_Coordinates): ImmutableRectangle {
+    static fromCoordinates(object: ICoordinates): ImmutableRectangle {
         return new this({
             x: object.x1,
             y: object.y1,
@@ -69,14 +60,14 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
     /**
      * helper creates a copy with some properties changed
      */
-    private altered = (props: Partial<I_Rectangle>): ImmutableRectangle => {
+    private altered = (props: Partial<IRectangle>): ImmutableRectangle => {
         return new ImmutableRectangle({
             ...this.props,
             ...props
         });
     }
 
-//----------------------------GET ALIASED & COMPUTED VALUES--------------------------//
+// ----------------------------GET ALIASED & COMPUTED VALUES--------------------------//
 
     get x(): number {
         return this.x1;
@@ -117,7 +108,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
     /**
      * use this with spread operator, since get() properties aren't included in spread
      */
-    get props(): I_Rectangle {
+    get props(): IRectangle {
         return {
             x: this.x,
             y: this.y,
@@ -151,21 +142,21 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
         return this.height === this.width;
     }
 
-//----------------------------GET POINTS--------------------------//
+// ----------------------------GET POINTS--------------------------//
 
     get center() {
-        return this.getPointFromTuple(CENTER_POINT) as RectanglePoint & I_Center;
+        return this.getPointFromTuple(CENTER_POINT) as RectanglePoint & CenterPoint;
     }
 
     get corners() {
-        return Object.values(CORNERS).map(pair => this.getPointFromTuple(pair)) as Array<RectanglePoint & I_Center>
+        return Object.values(CORNERS).map(pair => this.getPointFromTuple(pair)) as (RectanglePoint & CenterPoint)[];
     }
 
     get midpoints() {
-        return Object.values(MIDPOINTS).map(pair => this.getPointFromTuple(pair)) as Array<RectanglePoint & I_Midpoint>
+        return Object.values(MIDPOINTS).map(pair => this.getPointFromTuple(pair)) as (RectanglePoint & MidPoint)[];
     }
 
-    get coordinates(): I_Coordinates {
+    get coordinates(): ICoordinates {
         return {
             x1: this.x1,
             x2: this.x2,
@@ -174,7 +165,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
         }
     }
 
-//----------------------------MOVING--------------------------//
+// ----------------------------MOVING--------------------------//
 
     /**
      * moves along the x-axis without changing size
@@ -210,19 +201,19 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * need to use a separate function and not just a setter in order to accept a
      * type that is different than the return type of a classes RectanglePoint
      */
-    setCenter = (point: I_Point): ImmutableRectangle => {
+    setCenter = (point: IPoint): ImmutableRectangle => {
         return this.shiftToPoint({...point, xName: CENTERS.X, yName: CENTERS.Y});
     };
 
     /**
      * keeps the height and width the same, but shifts the rectangle such that it includes the given named point
      */
-    shiftToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
+    shiftToPoint = (point: IRectanglePoint): ImmutableRectangle => {
         const current = this.getPointFromNames(point.xName, point.yName);
         return this.shift(point.x - current.x, point.y - current.y);
     };
 
-//----------------------------SCALING--------------------------//
+// ----------------------------SCALING--------------------------//
 
     /**
      * scaling determines the width and height values
@@ -234,7 +225,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * this function is a lot simpler with immutable objects because
      * each value can be dealt with individually without any changes to the others
      */
-    scale = (float: number, fixedPoint: I_PointName = this.center): ImmutableRectangle => {
+    scale = (float: number, fixedPoint: IPointName = this.center): ImmutableRectangle => {
         return this.altered({
             width: this.width * float,
             height: this.height * float,
@@ -245,7 +236,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * scales such that the width matches the passed value
      * while preserving the current aspect ratio
      */
-    scaleToWidth = (width: number, fixedPoint?: I_PointName): ImmutableRectangle => {
+    scaleToWidth = (width: number, fixedPoint?: IPointName): ImmutableRectangle => {
         const float = width / this.width;
         return this.scale(float, fixedPoint);
     };
@@ -254,7 +245,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * scales such that the height matches the passed value
      * while preserving the current aspect ratio
      */
-    scaleToHeight = (height: number, fixedPoint?: I_PointName): ImmutableRectangle => {
+    scaleToHeight = (height: number, fixedPoint?: IPointName): ImmutableRectangle => {
         const float = height / this.height;
         return this.scale(float, fixedPoint);
     };
@@ -266,7 +257,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * presumably scales from the center of the opposite side, but can pass a fixedPoint if top or bottom is preferred
      * for example, scale x2 to 500 will change the width and height but preserve x1
      */
-    scaleToSide = (value: number, side: SIDES, fixedPoint?: I_PointName): ImmutableRectangle => {
+    scaleToSide = (value: number, side: Side, fixedPoint?: IPointName): ImmutableRectangle => {
         const oppositeSideName = oppositeName(side);
         const oppositeValue = this[oppositeSideName];
         const scale = Math.abs(value - oppositeValue) / Math.abs(this[side] - oppositeValue);
@@ -284,20 +275,19 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * center changes nothing
      * corners are the problem
      */
-    scaleToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
-        if ( isCenter(point) ) {
+    scaleToPoint = (point: IRectanglePoint): ImmutableRectangle => {
+        if (isCenter(point)) {
             return this;
         }
-        if ( isMidpoint(point) ) {
-            if ( point.xName === CENTERS.X ) {
-                //top and bottom -> change y
-                return this.scaleToSide( point.y, midpointSide(point) );
+        if (isMidpoint(point)) {
+            if (isCenterX(point)) {
+                // top and bottom -> change y
+                return this.scaleToSide(point.y, midpointSide(point));
             } else {
-                //left and right -> change x
-                return this.scaleToSide( point.x, midpointSide(point) );
+                // left and right -> change x
+                return this.scaleToSide(point.x, midpointSide(point));
             }
-        }
-        else { //isCorner
+        } else { // isCorner
             /**
              * look at the stretched rectangle to get the scale in both directions
              * and apply the average of the two
@@ -305,16 +295,16 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
             const stretched = this.stretchToPoint(point);
             const scaleX = stretched.width / this.width;
             const scaleY = stretched.height / this.height;
-            return this.scale( (scaleX + scaleY) / 2, this.getOppositePoint(point) );
+            return this.scale((scaleX + scaleY) / 2, this.getOppositePoint(point));
         }
     }
 
-//----------------------------STRETCHING--------------------------//
+// ----------------------------STRETCHING--------------------------//
     /**
      * changes the width while keeping the height and y values the same
      * can stretch from the left or right, but default to center
      */
-    stretchToWidth = (width: number, fixedProperty: XNames = CENTERS.X): ImmutableRectangle => {
+    stretchToWidth = (width: number, fixedProperty: XNames = 'xmid'): ImmutableRectangle => {
         let x = 0;
         switch (fixedProperty) {
             case SIDES.LEFT:
@@ -337,7 +327,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * changes the height while keeping the width and x values the same
      * can stretch from the top or bottom, but default to center
      */
-    stretchToHeight = (height: number, fixedProperty: YNames = CENTERS.Y): ImmutableRectangle => {
+    stretchToHeight = (height: number, fixedProperty: YNames = 'ymid'): ImmutableRectangle => {
         let y = 0;
         switch (fixedProperty) {
             case SIDES.TOP:
@@ -362,18 +352,18 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * or can alter both sides but keep the area the same
      * default is area
      */
-    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint: I_PointName = this.center ): ImmutableRectangle => {
-        if ( preserve === "width" ) {
-            return this.stretchToHeight( this.width / ratio, fixedPoint.yName );
-        } else if ( preserve === "height" ) {
-            return this.stretchToWidth( this.height * ratio, fixedPoint.xName );
+    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint: IPointName = this.center): ImmutableRectangle => {
+        if (preserve === "width") {
+            return this.stretchToHeight(this.width / ratio, fixedPoint.yName);
+        } else if (preserve === "height") {
+            return this.stretchToWidth(this.height * ratio, fixedPoint.xName);
         } else {
             /**
              * to preserve area, calculate the new width and height
              * make a new rectangle with these values and shift it to the fixed point
              */
-            const width = Math.sqrt( ratio * this.area );
-            const height = Math.sqrt( this.area / ratio );
+            const width = Math.sqrt(ratio * this.area);
+            const height = Math.sqrt(this.area / ratio);
             return new ImmutableRectangle({width, height})
                 .shiftToPoint(this.getPoint(fixedPoint))
         }
@@ -385,13 +375,13 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * make use of the fact that the opposite point stays the same
      * can't just look at the difference because don't know if it's an increase or a decrease
      */
-    stretchToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
+    stretchToPoint = (point: IRectanglePoint): ImmutableRectangle => {
         const opposite = this.getOppositePoint(point);
         return this.stretchToHeight(Math.abs(point.y - opposite.y), opposite.yName)
             .stretchToWidth(Math.abs(point.x - opposite.x), opposite.xName);
     };
 
-//-------------------------ACCESSING NAMED POINTS--------------------------//
+// -------------------------ACCESSING NAMED POINTS--------------------------//
 
     /** creates a shortcut when working with enums
      * @param {string[]} pair
@@ -416,7 +406,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
         });
     };
 
-    getPoint = (point: I_PointName): RectanglePoint => {
+    getPoint = (point: IPointName): RectanglePoint => {
         return this.getPointFromNames(point.xName, point.yName);
     }
 
@@ -424,11 +414,11 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * @param {RectanglePoint} point
      * @returns {RectanglePoint}
      */
-    getOppositePoint = (point: I_RectanglePoint): RectanglePoint => {
+    getOppositePoint = (point: IRectanglePoint): RectanglePoint => {
         return this.getPoint(oppositePointName(point));
     };
 
-//-------------------------CONTAINED VALUES--------------------------//
+// -------------------------CONTAINED VALUES--------------------------//
 
     /**
      * @param {number} value
@@ -468,8 +458,8 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * @param {number} point.y
      * @returns {boolean}
      */
-    contains = (point: I_Point): boolean => {
-        //returns true if the point is inside the rectangle OR on the border
+    contains = (point: IPoint): boolean => {
+        // returns true if the point is inside the rectangle OR on the border
         return (this.containsX(point.x) && this.containsY(point.y));
     };
 
@@ -480,7 +470,7 @@ export default class ImmutableRectangle implements I_Point, I_Sized, I_Coordinat
      * @param {number} point.y
      * @returns {Object}
      */
-    constrain = (point: I_Point): I_Point => {
+    constrain = (point: IPoint): IPoint => {
         return {
             x: this.constrainX(point.x),
             y: this.constrainY(point.y),

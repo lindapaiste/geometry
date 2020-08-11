@@ -1,8 +1,8 @@
-import {I_Point} from "../rectanglePoints/types";
-import {I_RangeMethods} from "../range/types";
+import {IPoint} from "../rectanglePoints/types";
+import {IRangeMethods} from "../range/types";
 import ImmutableRectangle from "./ImmutableRectangle";
-import {midpointSide} from "../rectanglePoints/enums";
 import {isXName} from "../rectanglePoints/booleans";
+import {midpointSide} from "../rectanglePoints/midpointsSides";
 
 /**
  * an XY Range which can contain or constrain Rectangle objects rather than Points
@@ -10,11 +10,11 @@ import {isXName} from "../rectanglePoints/booleans";
  * copy-and-pasting from BoundedRectangle for now
  * not sure how these will relate in the future
  */
-export default class RectangleBoundary implements I_RangeMethods<ImmutableRectangle> {
+export default class RectangleBoundary implements IRangeMethods<ImmutableRectangle> {
 
-    public readonly boundary: I_RangeMethods<I_Point>;
+    public readonly boundary: IRangeMethods<IPoint>;
 
-    constructor(boundary: I_RangeMethods<I_Point>) {
+    constructor(boundary: IRangeMethods<IPoint>) {
         this.boundary = boundary;
     }
 
@@ -43,9 +43,9 @@ export default class RectangleBoundary implements I_RangeMethods<ImmutableRectan
         return rect.corners.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
-                    //spread gets the names from the initial and the x and y from the constrained
+                    // spread gets the names from the initial and the x and y from the constrained
                     return r.shiftToPoint({...point, ...this.boundary.constrain(point)})
                 }
             }, rect)
@@ -67,7 +67,7 @@ export default class RectangleBoundary implements I_RangeMethods<ImmutableRectan
         return rect.midpoints.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
                     /**
                      * if a midpoint wound up outside, pull back in the side that the midpoint is on
@@ -90,9 +90,9 @@ export default class RectangleBoundary implements I_RangeMethods<ImmutableRectan
         return rect.corners.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
-                    //spread gets the names from the initial and the x and y from the constrained
+                    // spread gets the names from the initial and the x and y from the constrained
                     return r.stretchToPoint({...point, ...this.boundary.constrain(point)})
                 }
             }, rect)

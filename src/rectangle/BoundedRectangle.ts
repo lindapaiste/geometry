@@ -1,8 +1,9 @@
 import ImmutableRectangle from "./ImmutableRectangle";
-import {midpointSide, XNames, YNames} from "../rectanglePoints/enums";
-import {I_XYRangeMethods} from "../range/types";
-import {I_PointName, I_RectanglePoint} from "../rectanglePoints/types";
+import {XNames, YNames} from "../rectanglePoints/enums";
+import {IXYRangeMethods} from "../range/types";
+import {IPointName, IRectanglePoint} from "..";
 import {isXName} from "../rectanglePoints/booleans";
+import {midpointSide} from "../rectanglePoints/midpointsSides";
 
 /**
  * uses the internal rectangle's functions to execute the move,
@@ -14,9 +15,9 @@ import {isXName} from "../rectanglePoints/booleans";
 
 export default class BoundedRectangle {
     private readonly rectangle: ImmutableRectangle;
-    private readonly boundary: I_XYRangeMethods;
+    private readonly boundary: IXYRangeMethods;
 
-    constructor(rectangle: ImmutableRectangle, boundary: I_XYRangeMethods) {
+    constructor(rectangle: ImmutableRectangle, boundary: IXYRangeMethods) {
         this.rectangle = rectangle;
         this.boundary = boundary;
     }
@@ -29,7 +30,7 @@ export default class BoundedRectangle {
         return !rect.corners.every(point => this.boundary.contains(point));
     }
 
-//----------------------------MOVING--------------------------//
+// ----------------------------MOVING--------------------------//
 
     /**
      * for moves which do not impact the size,
@@ -41,9 +42,9 @@ export default class BoundedRectangle {
         return rect.corners.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
-                    //spread gets the names from the initial and the x and y from the constrained
+                    // spread gets the names from the initial and the x and y from the constrained
                     return r.shiftToPoint({...point, ...this.boundary.constrain(point)})
                 }
             }, rect)
@@ -61,11 +62,11 @@ export default class BoundedRectangle {
         return this.shiftBack(this.rectangle.shift(changeX, changeY));
     };
 
-    shiftToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
+    shiftToPoint = (point: IRectanglePoint): ImmutableRectangle => {
         return this.shiftBack(this.rectangle.shiftToPoint(point));
     };
 
-//----------------------------SCALING--------------------------//
+// ----------------------------SCALING--------------------------//
 
     /**
      * when scaling need to make sure that it doesn't get so big that it overflows
@@ -83,7 +84,7 @@ export default class BoundedRectangle {
         return rect.midpoints.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
                     /**
                      * if a midpoint wound up outside, pull back in the side that the midpoint is on
@@ -96,15 +97,15 @@ export default class BoundedRectangle {
             }, rect)
     }
 
-    scale = (float: number, fixedPoint?: I_RectanglePoint): ImmutableRectangle => {
+    scale = (float: number, fixedPoint?: IRectanglePoint): ImmutableRectangle => {
         return this.scaleBack(this.rectangle.scale(float, fixedPoint));
     };
 
-    scaleToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
+    scaleToPoint = (point: IRectanglePoint): ImmutableRectangle => {
         return this.scaleBack(this.rectangle.scaleToPoint(point));
     }
 
-//----------------------------STRETCHING--------------------------//
+// ----------------------------STRETCHING--------------------------//
 
     /**
      * for a stretch, need to constrain all four corners
@@ -116,9 +117,9 @@ export default class BoundedRectangle {
         return rect.corners.reduce(
             (r, point) => {
                 if (this.boundary.contains(point)) {
-                    return r; //no change
+                    return r; // no change
                 } else {
-                    //spread gets the names from the initial and the x and y from the constrained
+                    // spread gets the names from the initial and the x and y from the constrained
                     return r.stretchToPoint({...point, ...this.boundary.constrain(point)})
                 }
             }, rect)
@@ -132,14 +133,14 @@ export default class BoundedRectangle {
         return this.stretchBack(this.rectangle.stretchToHeight(height, fixedProperty));
     };
 
-    stretchToPoint = (point: I_RectanglePoint): ImmutableRectangle => {
+    stretchToPoint = (point: IRectanglePoint): ImmutableRectangle => {
         return this.stretchBack(this.rectangle.stretchToPoint(point))
     };
 
     /**
      * using scaleBack rather than stretchBack because want to keep the applied ratio
      */
-    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint?: I_PointName): ImmutableRectangle => {
+    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint?: IPointName): ImmutableRectangle => {
         return this.scaleBack(this.rectangle.stretchToRatio(ratio, preserve, fixedPoint));
     }
 }

@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es5",
     "sourceMap": true,
-    "noEmit": true,
-    "downlevelIteration": false
+    "downlevelIteration": false,
+    "declaration": false,
+    "strict": true,
+    "outDir": "./lib",
+    "allowJs": true
   },
-  "lib": ["es6", "dom", "es2017"],
+  "lib": ["es2019", "dom", "esnext", "es2017.object", "dom.iterable"],
+  "include": [
+    "src"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "__tests__"
   ]
 }

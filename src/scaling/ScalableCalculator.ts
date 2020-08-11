@@ -1,8 +1,7 @@
-import {fromPairs} from "lodash";
 import {Limits} from "./types";
-import {I_NumericRange} from "../range/types";
+import {INumericRange} from "..";
 
-export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable, number>> {
+export default class ScaleCalculator<Scalable extends string, OT extends Record<Scalable, number>> {
     private readonly scalableProperties: Scalable[];
     private readonly object: OT;
 
@@ -20,10 +19,17 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
     }
 
     getScaledValues(scale: number): Required<Pick<OT, Scalable>> {
+        const scaled: Partial<Record<Scalable, number>> = {};
+        this.scalableProperties.forEach(
+            propertyName => scaled[propertyName] = this._getScaledValue(propertyName, scale)
+        );
+        return scaled as Required<Pick<OT, Scalable>>;
+        /*
         const pairs: [Scalable, number][] = this.scalableProperties.map(propertyName => ([
             propertyName, this._getScaledValue(propertyName, scale)
         ]));
-        return fromPairs(pairs) as Required<Pick<OT, Scalable>>;
+        return Object.fromEntries(pairs) as Required<Pick<OT, Scalable>>;
+        */
     }
 
     calcScalePropertyToValue(basisProperty: Scalable, basisValue: number): number {
@@ -39,14 +45,17 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
         return this._getScaledValue(propertyName, scale);
     }
 
-    calcScalePropertyToRange(propertyName: Scalable, range: I_NumericRange): number {
+    /**
+     * calculate a scale which forces the given property into the given range
+     * if the value is already in range, return 1 so as not to make any changes
+     */
+    calcScalePropertyToRange(propertyName: Scalable, range: INumericRange): number {
         const currentValue = this._currentValue(propertyName);
-        console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently ${currentValue}`);
+        // console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently ${currentValue}`);
         if (!range.contains(currentValue)) {
             const value = range.constrain(currentValue);
             return this.calcScalePropertyToValue(propertyName, value);
         } else {
-            //if value is already acceptable, make no changes
             return 1;
         }
     }
@@ -57,7 +66,7 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
      * @return {number} the largest scale for which all properties are less than the provided maximum
      */
     calcScaleToFit(propertyMaximums: Limits<Scalable>): number {
-        //in order to meet all conditions, we want the MINIMUM
+        // in order to meet all conditions, we want the MINIMUM
         return Math.min(...this._getScalesFromLimits(propertyMaximums));
     }
 
@@ -67,12 +76,14 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
      * @return {number} the smallest scale for which all properties are greater than the provided minimum
      */
     calcScaleToCover(propertyMinimums: Limits<Scalable>): number {
-        //in order to meet all conditions, we want the MAXIMUM
+        // in order to meet all conditions, we want the MAXIMUM
         return Math.max(...this._getScalesFromLimits(propertyMinimums));
     }
 
     /**
-     * get an array of scales which correspond to the conditions
+     * get an array of scales which correspond to each condition
+     *
+     * shared logic between cover and fit
      * use min or max in order to meet all conditions, as applicable
      */
     private _getScalesFromLimits(limits: Limits<Scalable>): number[] {
@@ -83,9 +94,9 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
          */
         const scales: number[] = [];
         this.scalableProperties.forEach(propertyName => {
-            const limitVal = limits[propertyName] || undefined; //can do this whether or not the property exists
-                                                                // because I defined Limits to be string-indexed
-            if (limitVal !== undefined) {
+            const limitVal = limits[propertyName]; // can do this whether or not the property exists
+                                                                //  because I defined Limits to be string-indexed
+            if (typeof limitVal === "number") {
                 scales.push(this.calcScalePropertyToValue(propertyName, limitVal));
             }
         });
@@ -98,5 +109,3 @@ export class ScaleCalculator<Scalable extends string, OT extends Record<Scalable
         return scales;
     }
 }
-
-export default ScaleCalculator;

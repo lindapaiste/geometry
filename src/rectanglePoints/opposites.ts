@@ -1,4 +1,4 @@
-import {I_PointName} from "./types";
+import {IPointName} from "./types";
 import {CENTERS, SIDES, XNames, YNames} from "./enums";
 import {isXName} from "./booleans";
 
@@ -32,7 +32,7 @@ export const oppositeName = (name: XNames | YNames): typeof name => {
         : oppositeYName(name);
 }
 
-export const oppositePointName = (point: I_PointName): I_PointName => {
+export const oppositePointName = (point: IPointName): IPointName => {
     return {
         xName: oppositeXName(point.xName),
         yName: oppositeYName(point.yName),

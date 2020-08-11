@@ -1,6 +1,6 @@
 import {XNames, YNames} from "./enums";
 import {PointNameTuple} from "./name-tuples";
-import {I_PointName, I_RectanglePoint, I_RectanglePointClass} from "./types";
+import {IPointName, IRectanglePoint} from "./types";
 import {oppositePointName} from "./opposites";
 
 /**
@@ -9,17 +9,19 @@ import {oppositePointName} from "./opposites";
  * but that calculation is all static
  */
 
-export default class RectanglePoint implements I_RectanglePoint, I_RectanglePointClass {
+export default class RectanglePoint implements IRectanglePoint {
     public readonly x: number;
     public readonly y: number;
     public readonly xName: XNames;
     public readonly yName: YNames;
+    public readonly opposite: IPointName;
 
-    constructor(props: I_RectanglePoint) {
+    constructor(props: IRectanglePoint) {
         this.x = props.x;
         this.y = props.y;
         this.xName = props.xName;
         this.yName = props.yName;
+        this.opposite = oppositePointName(props);
     }
 
     pointName(): PointNameTuple {
@@ -28,8 +30,7 @@ export default class RectanglePoint implements I_RectanglePoint, I_RectanglePoin
 
 
     oppositePointName(): PointNameTuple {
-        const opp = oppositePointName(this);
-        return [opp.xName, opp.yName];
+        return [this.opposite.xName, this.opposite.yName];
     };
 
     get key(): string {
@@ -41,16 +42,3 @@ export default class RectanglePoint implements I_RectanglePoint, I_RectanglePoin
     }
 
 }
-
-export class RectanglePointName implements I_PointName {
-    public readonly xName: XNames;
-    public readonly yName: YNames;
-    public readonly opposite: I_PointName;
-
-    constructor(point: I_PointName) {
-        this.xName = point.xName;
-        this.yName = point.yName;
-        this.opposite = oppositePointName(point);
-    }
-}
-

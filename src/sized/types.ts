@@ -3,7 +3,7 @@
  * rectangles are sized, but they are also positioned
  * whereas I_Sized objects do not need an x or y
  */
-export interface I_Sized {
+export interface ISized {
     width: number,
     height: number,
 }

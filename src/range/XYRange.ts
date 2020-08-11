@@ -1,14 +1,14 @@
 import {NumericRange} from "./NumericRange";
-import {I_Coordinates} from "../rectangle/types";
-import {I_DefinedXYRange, I_NumericRange, I_XYRange, I_XYRangeMethods} from "./types";
-import {I_Point} from "../rectanglePoints/types";
+import {ICoordinates} from "../rectangle/types";
+import {IDefinedXYRange, INumericRange, IXYRange, IXYRangeMethods} from "./types";
+import {IPoint} from "../rectanglePoints/types";
 
 /**
  * XY range is allowed to be open in any direction
  * all Rectangles are XYRanges, but not all XYRanges are Rectangles
  * it is only a rectangle if it is closed on all four sides
  */
-export default class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYRangeMethods {
+export default class XYRange implements Partial<ICoordinates>, IXYRange, IXYRangeMethods {
 
     /**
      * not sure if there is much purpose in storing the x1s,
@@ -18,13 +18,13 @@ export default class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYR
     public readonly x2: number | undefined;
     public readonly y1: number | undefined;
     public readonly y2: number | undefined;
-    public readonly rangeX: I_NumericRange;
-    public readonly rangeY: I_NumericRange;
+    public readonly rangeX: INumericRange;
+    public readonly rangeY: INumericRange;
 
     /**
      * can construct from a Rectangle class or an object of props
      */
-    constructor(coordinates: Partial<I_Coordinates>) {
+    constructor(coordinates: Partial<ICoordinates>) {
         this.x1 = coordinates.x1;
         this.x2 = coordinates.x2;
         this.y1 = coordinates.y1;
@@ -50,15 +50,15 @@ export default class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYR
         return this.rangeY.constrain(value);
     }
 
-    contains = (point: I_Point): boolean => {
-        //returns true if the point is inside the rectangle OR on the border
+    contains = (point: IPoint): boolean => {
+        // returns true if the point is inside the rectangle OR on the border
         return (this.containsX(point.x) && this.containsY(point.y));
     };
 
     /**
      * returns an edited copy of the point rather than mutating it
      */
-    constrain = (point: I_Point): I_Point => {
+    constrain = (point: IPoint): IPoint => {
         return {
             x: this.constrainX(point.x),
             y: this.constrainY(point.y),
@@ -68,7 +68,7 @@ export default class XYRange implements Partial<I_Coordinates>, I_XYRange, I_XYR
     /**
      * check whether all four sides have values
      */
-    isDefined = (): this is this & Required<I_Coordinates> & I_DefinedXYRange => {
+    isDefined = (): this is this & Required<ICoordinates> & IDefinedXYRange => {
         return this.rangeX.isDefined() && this.rangeY.isDefined();
     }
 

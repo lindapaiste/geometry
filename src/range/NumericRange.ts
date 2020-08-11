@@ -1,9 +1,9 @@
-import {I_NumericRange, I_Range} from "./types";
+import {INumericRange, IRange} from "./types";
 
 /**
  * use generics to define if the range is open-ended or not
  */
-export class NumericRange<Min extends number | undefined, Max extends number | undefined> implements Partial<I_Range>, I_NumericRange {
+export class NumericRange<Min extends number | undefined, Max extends number | undefined> implements Partial<IRange>, INumericRange {
     public readonly max: Max;
     public readonly min: Min;
 
@@ -34,7 +34,7 @@ export class NumericRange<Min extends number | undefined, Max extends number | u
     /**
      * @return {boolean}
      */
-    isDefined(): this is this & I_Range {
+    isDefined(): this is this & IRange {
         return this.hasMin() && this.hasMax();
     }
 
@@ -86,8 +86,8 @@ export class NumericRange<Min extends number | undefined, Max extends number | u
      * @param {Range} range
      * @return boolean
      */
-    hasOverlap( range: I_NumericRange ): boolean {
-        //no overlap when this.max < range.min or this.min > range.max
+    hasOverlap( range: INumericRange ): boolean {
+        // no overlap when this.max < range.min or this.min > range.max
         return ! ( ( this.hasMax() && range.hasMin() && this.max < range.min )
         || ( this.hasMin() && range.hasMax() && this.min > range.max ) );
     }
@@ -98,9 +98,9 @@ export class NumericRange<Min extends number | undefined, Max extends number | u
      * @param {Range} range
      * @return {Range|null}
      */
-    intersection( range: I_NumericRange ): I_NumericRange | null {
+    intersection( range: INumericRange ): INumericRange | null {
         if ( ! this.hasOverlap(range) ) return null;
-        //cannot use constrain function on undefined values
+        // cannot use constrain function on undefined values
         const min = ( range.hasMin() ) ? this.constrain( range.min ) : this.min;
         const max = ( range.hasMax() ) ? this.constrain( range.max ) : this.max;
         return new NumericRange( min, max );
@@ -112,13 +112,13 @@ export class NumericRange<Min extends number | undefined, Max extends number | u
      * @param {Range} range
      * @return {Range|null}
      */
-    union( range: I_NumericRange ): I_NumericRange | null {
+    union( range: INumericRange ): INumericRange | null {
         if ( ! this.hasOverlap(range) ) return null;
-        //if either value is undefined, then the result is open ended
+        // if either value is undefined, then the result is open ended
         const min = ( range.hasMin() && this.hasMin() ) ? Math.min( range.min, this.min ) : undefined;
         const max = ( range.hasMax() && this.hasMax() ) ? Math.max( range.max, this.max ) : undefined;
         return new NumericRange( min, max );
     }
 }
-//is both named and default export
+// is both named and default export
 export default NumericRange;
