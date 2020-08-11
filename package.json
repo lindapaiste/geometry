@@ -1,6 +1,6 @@
 {
   "name": "@lindapaiste/geometry",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ranges and rectangles",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,5 +42,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {},
-  "files": ["lib/**/*"]
+  "files": [
+    "lib/**/*"
+  ]
 }
