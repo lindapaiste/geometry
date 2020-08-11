@@ -4,14 +4,14 @@
  * whereas I_Sized objects do not need an x or y
  */
 export interface ISized {
-    width: number,
-    height: number,
+  width: number;
+  height: number;
 }
 
 export interface PropWidth {
-    width: number,
+  width: number;
 }
 
 export interface PropHeight {
-    height: number,
+  height: number;
 }

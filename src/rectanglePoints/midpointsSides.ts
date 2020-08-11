@@ -1,15 +1,17 @@
-import {isCenterX, isXName} from "./booleans";
-import {MidPoint, Side} from "./enums";
+import { isCenterX, isXName } from "./booleans";
+import { MidPoint, Side } from "./enums";
 
 export const sideMidpoint = (side: Side): MidPoint => {
-    return isXName(side) ? {
+  return isXName(side)
+    ? {
         xName: side,
-        yName: 'ymid'
-    } : {
-        xName: 'xmid',
+        yName: "ymid",
+      }
+    : {
+        xName: "xmid",
         yName: side,
-    }
-}
+      };
+};
 export const midpointSide = (point: MidPoint): Side => {
-    return isCenterX(point) ? point.yName : point.xName;
-}
+  return isCenterX(point) ? point.yName : point.xName;
+};

@@ -1,4 +1,4 @@
-import {CENTERS, SIDES, XNames, XSides, YNames, YSides} from "./enums";
+import { CENTERS, SIDES, XNames, XSides, YNames, YSides } from "./enums";
 
 export type PointNameTuple = [XNames, YNames];
 export type CornerName = [XSides, YSides];
@@ -9,10 +9,10 @@ export type CornerName = [XSides, YSides];
  * @enum {string[]}
  */
 export const CORNERS: Record<string, CornerName> = Object.freeze({
-    TOP_LEFT: [SIDES.LEFT, SIDES.TOP],
-    TOP_RIGHT: [SIDES.RIGHT, SIDES.TOP],
-    BOTTOM_LEFT: [SIDES.LEFT, SIDES.BOTTOM],
-    BOTTOM_RIGHT: [SIDES.RIGHT, SIDES.BOTTOM],
+  TOP_LEFT: [SIDES.LEFT, SIDES.TOP],
+  TOP_RIGHT: [SIDES.RIGHT, SIDES.TOP],
+  BOTTOM_LEFT: [SIDES.LEFT, SIDES.BOTTOM],
+  BOTTOM_RIGHT: [SIDES.RIGHT, SIDES.BOTTOM],
 });
 export type MidpointName = [XSides, CENTERS.Y] | [CENTERS.X, YSides];
 /**
@@ -22,10 +22,10 @@ export type MidpointName = [XSides, CENTERS.Y] | [CENTERS.X, YSides];
  * @enum {string[]}
  */
 export const MIDPOINTS: Record<string, MidpointName> = Object.freeze({
-    CENTER_LEFT: [SIDES.LEFT, CENTERS.Y],
-    CENTER_RIGHT: [SIDES.RIGHT, CENTERS.Y],
-    TOP_CENTER: [CENTERS.X, SIDES.BOTTOM],
-    BOTTOM_CENTER: [CENTERS.X, SIDES.BOTTOM],
+  CENTER_LEFT: [SIDES.LEFT, CENTERS.Y],
+  CENTER_RIGHT: [SIDES.RIGHT, CENTERS.Y],
+  TOP_CENTER: [CENTERS.X, SIDES.BOTTOM],
+  BOTTOM_CENTER: [CENTERS.X, SIDES.BOTTOM],
 });
 export type CenterName = [CENTERS.X, CENTERS.Y];
 /**
@@ -42,7 +42,7 @@ export const CENTER_POINT: CenterName = [CENTERS.X, CENTERS.Y];
  * @enum {string[]}
  */
 export const POINTS: Record<string, PointNameTuple> = Object.freeze({
-    ...CORNERS,
-    ...MIDPOINTS,
-    CENTER_POINT
+  ...CORNERS,
+  ...MIDPOINTS,
+  CENTER_POINT,
 });

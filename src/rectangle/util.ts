@@ -1,4 +1,4 @@
-import {IRectangle} from "./types";
+import { IRectangle } from "./types";
 
 /**
  * extract just the I_Rectangle props so that it doesn't matter
@@ -6,8 +6,8 @@ import {IRectangle} from "./types";
  * primarily used for testing
  */
 export const toRectangleProps = (obj: IRectangle): IRectangle => ({
-    x: obj.x,
-    y: obj.y,
-    width: obj.width,
-    height: obj.height,
+  x: obj.x,
+  y: obj.y,
+  width: obj.width,
+  height: obj.height,
 });
