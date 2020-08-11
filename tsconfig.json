@@ -4,7 +4,7 @@
     "target": "es5",
     "sourceMap": true,
     "downlevelIteration": false,
-    "declaration": false,
+    "declaration": true,
     "strict": true,
     "outDir": "./lib",
     "allowJs": true
