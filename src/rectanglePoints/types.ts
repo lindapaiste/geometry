@@ -1,10 +1,6 @@
-import { XNames, YNames } from "./enums";
-import { PointNameTuple } from "./name-tuples";
-
-export interface IPoint {
-  x: number;
-  y: number;
-}
+import {XNames, YNames} from "./enums";
+import {PointNameTuple} from "./name-tuples";
+import {IPoint} from "..";
 
 export interface IRectanglePoint extends IPoint, IPointName {
   x: number;

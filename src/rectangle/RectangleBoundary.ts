@@ -1,8 +1,8 @@
-import { IPoint } from "../rectanglePoints/types";
 import { IRangeMethods } from "../range/types";
 import ImmutableRectangle from "./ImmutableRectangle";
 import { isXName } from "../rectanglePoints/booleans";
 import { midpointSide } from "../rectanglePoints/midpointsSides";
+import {IPoint} from "..";
 
 /**
  * an XY Range which can contain or constrain Rectangle objects rather than Points
