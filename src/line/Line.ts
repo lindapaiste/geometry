@@ -36,7 +36,7 @@ export default class Line implements LineFormula {
      * get the x value for a given y by using formula x = (y - b)/m
      */
     public xForY = (y: number): number => {
-        return (y - this.slope) / this.yIntercept;
+        return (y - this.yIntercept) / this.slope;
     }
 
     /**
