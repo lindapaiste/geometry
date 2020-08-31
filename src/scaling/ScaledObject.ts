@@ -1,15 +1,13 @@
-import { ISized } from "..";
-import ScaledVersionCreator, { ApplyScaledValues } from "./ScaledVersion";
+import {ISized} from "..";
+import ScaledVersionCreator, {ApplyScaledValues} from "./ScaledVersion";
 import ScaleCalculator from "./ScalableCalculator";
 
 type WH = "width" | "height";
 
-export class ScaledObjectCreator<
-  OT extends ISized
-> extends ScaledVersionCreator<WH, OT> {
-  constructor(object: OT, applyScaledValues?: ApplyScaledValues<WH, OT>) {
-    super(["width", "height"], object, applyScaledValues);
-  }
+export class ScaledObjectCreator<OT extends ISized> extends ScaledVersionCreator<WH, OT> {
+    constructor(object: OT, applyScaledValues?: ApplyScaledValues<WH, OT>) {
+        super(["width", "height"], object, applyScaledValues);
+    }
 }
 
 /*export const ScaledObjectCreator = <OT extends Sized>(object: OT, applyScaledValues?: ApplyScaledValues<'width' | 'height', OT & StringIndexed>) => {
@@ -17,35 +15,35 @@ export class ScaledObjectCreator<
 };*/
 
 export const getScaleToCover = (
-  object: ISized,
-  target: Partial<ISized>
+    object: ISized,
+    target: Partial<ISized>
 ): number => {
-  return new ScaleCalculator(["width", "height"], object).calcScaleToCover(
-    target
-  );
+    return new ScaleCalculator(["width", "height"], object).calcScaleToCover(
+        target
+    );
 };
 
 export const getScaleToFit = (
-  object: ISized,
-  target: Partial<ISized>
+    object: ISized,
+    target: Partial<ISized>
 ): number => {
-  return new ScaleCalculator(["width", "height"], object).calcScaleToFit(
-    target
-  );
+    return new ScaleCalculator(["width", "height"], object).calcScaleToFit(
+        target
+    );
 };
 
 export const getScaleForHeight = (object: ISized, height: number): number => {
-  return new ScaleCalculator(
-    ["width", "height"],
-    object
-  ).calcScalePropertyToValue("height", height);
+    return new ScaleCalculator(
+        ["width", "height"],
+        object
+    ).calcScalePropertyToValue("height", height);
 };
 
 export const getScaleForWidth = (object: ISized, width: number): number => {
-  return new ScaleCalculator(
-    ["width", "height"],
-    object
-  ).calcScalePropertyToValue("width", width);
+    return new ScaleCalculator(
+        ["width", "height"],
+        object
+    ).calcScalePropertyToValue("width", width);
 };
 
 /**
@@ -53,6 +51,6 @@ export const getScaleForWidth = (object: ISized, width: number): number => {
  * will have the aspect ratio of the object
  */
 export const fitDisplayedSize = (object: ISized, target: ISized): ISized => {
-  const calc = new ScaleCalculator(["width", "height"], object);
-  return calc.getScaledValues(calc.calcScaleToFit(target));
+    const calc = new ScaleCalculator(["width", "height"], object);
+    return calc.getScaledValues(calc.calcScaleToFit(target));
 };

@@ -13,9 +13,3 @@ export interface IRectangle extends ISized, IPoint {
   width: number;
   height: number;
 }
-
-export interface IRectangleClass
-  extends IPoint,
-    ISized,
-    ICoordinates,
-    IRectangle {}

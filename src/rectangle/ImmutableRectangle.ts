@@ -12,8 +12,7 @@ import {midpointSide, sideMidpoint} from "../rectanglePoints/midpointsSides";
 /**
  * has all of the same editing functions, but always returns a new object
  */
-export default class ImmutableRectangle
-    implements IPoint, ISized, ICoordinates, IRectangle, IXYRangeMethods {
+export default class ImmutableRectangle implements IPoint, ISized, ICoordinates, IRectangle, IXYRangeMethods {
     public readonly range: XYRange;
 
     /**

@@ -1,7 +1,6 @@
 import {LineDef, LineFormula, LineFromAngle, LineFromPoints} from "./types";
-import {degreesToRadians} from "../angles/convert";
-import {eitherToXY} from "../points/convert";
-import {EitherPoint} from "../points/types";
+import {degreesToRadians} from "../angles";
+import {EitherPoint, pointToXY} from "../points";
 
 /**
  * find which definition we are dealing with
@@ -28,8 +27,8 @@ export const lineToFormula = (line: LineDef): LineFormula => {
 }
 
 export const pointsToFormula = (endpoints: LineFromPoints): LineFormula => {
-    const a = eitherToXY(endpoints[0]);
-    const b = eitherToXY(endpoints[1]);
+    const a = pointToXY(endpoints[0]);
+    const b = pointToXY(endpoints[1]);
     /**
      * slope is rise over run
      */
@@ -62,6 +61,6 @@ export const angleToFormula = ({angle, point}: LineFromAngle): LineFormula => {
  * rearrange the y = mx + b formula to b = y - mx to get b from a slope and a point
  */
 export const findYIntercept = (slope: number, point: EitherPoint): number => {
-    const {x, y} = eitherToXY(point);
+    const {x, y} = pointToXY(point);
     return y - slope * x;
 }

@@ -1,4 +1,4 @@
-import {EitherPoint} from "../points/types";
+import {EitherPoint} from "../points";
 
 /**
  * a line can be defined by:

@@ -1,7 +1,7 @@
 import {NumericRange} from "./NumericRange";
 import {ICoordinates} from "../rectangle/types";
-import {IDefinedXYRange, INumericRange, IXYRange, IXYRangeMethods,} from "./types";
-import {IPoint} from "../points/types";
+import {IDefinedXYRange, INumericRange, IXYRange, IXYRangeMethods} from "./types";
+import {IPoint} from "../points";
 
 /**
  * XY range is allowed to be open in any direction

@@ -44,9 +44,9 @@ export const lineRectangleIntersection = (rect: IRectangle, line: LineDef): Segm
 export const rectangleSideSegments = (rect: IRectangle): Segment[] => {
     const {x1, x2, y1, y2} = toRectangleClass(rect).coordinates;
     return [
-        new Segment([x1, y1], [x2, y1]), //top
-        new Segment([x1, y2], [x2, y2]), //bottom
-        new Segment([x1, y1], [x1, y2]), //left
-        new Segment([x2, y1], [x2, y2]), //right
+        new Segment([x1, y1], [x2, y1]), // top
+        new Segment([x1, y2], [x2, y2]), // bottom
+        new Segment([x1, y1], [x1, y2]), // left
+        new Segment([x2, y1], [x2, y2]), // right
     ]
 }

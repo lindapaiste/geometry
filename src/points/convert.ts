@@ -9,7 +9,7 @@ export const isXY = (point: EitherPoint): point is IPoint => {
 }
 
 
-export const eitherToXY = (point: EitherPoint): IPoint => {
+export const pointToXY = (point: EitherPoint): IPoint => {
     if ( isXY(point)) {
         return point;
     } else {
@@ -18,7 +18,7 @@ export const eitherToXY = (point: EitherPoint): IPoint => {
     }
 }
 
-export const eitherToTuple = (point: EitherPoint): PointTuple => {
+export const pointToTuple = (point: EitherPoint): PointTuple => {
     if ( isXY(point) ) {
         return [point.x, point.y];
     } else {

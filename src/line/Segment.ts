@@ -1,6 +1,6 @@
 import {IPoint, NumericRange} from "..";
 import Line from "./Line";
-import {eitherToXY} from "../points/convert";
+import {pointToXY} from "../points/convert";
 import {EitherPoint} from "../points/types";
 import {ICoordinates} from "..";
 
@@ -16,8 +16,8 @@ export default class Segment implements ICoordinates {
     private line: Line;
 
     public constructor(start: EitherPoint, end: EitherPoint) {
-        this.start = eitherToXY(start);
-        this.end = eitherToXY(end);
+        this.start = pointToXY(start);
+        this.end = pointToXY(end);
         this.line = new Line([this.start, this.end]);
     }
 
