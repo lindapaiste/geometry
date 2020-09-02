@@ -24,7 +24,7 @@ export type MidpointName = [XSides, CENTERS.Y] | [CENTERS.X, YSides];
 export const MIDPOINTS: Record<string, MidpointName> = Object.freeze({
   CENTER_LEFT: [SIDES.LEFT, CENTERS.Y],
   CENTER_RIGHT: [SIDES.RIGHT, CENTERS.Y],
-  TOP_CENTER: [CENTERS.X, SIDES.BOTTOM],
+  TOP_CENTER: [CENTERS.X, SIDES.TOP],
   BOTTOM_CENTER: [CENTERS.X, SIDES.BOTTOM],
 });
 export type CenterName = [CENTERS.X, CENTERS.Y];
