@@ -63,10 +63,7 @@ export default class SizeFinder<T extends ISized> {
      * need to allow some margin of error when comparing aspect ratios to account for rounding
      * defaults to 1 pixel but can be adjusted
      */
-    getAspectRatioSizes = (
-        ratio: number = this.aspectRatio,
-        pixelFuzz: number = 1
-    ): T[] => {
+    getAspectRatioSizes = (ratio: number = this.aspectRatio, pixelFuzz: number = 1): T[] => {
         return this.sizeArray.filter(isAspectRatio(ratio, pixelFuzz));
     };
 

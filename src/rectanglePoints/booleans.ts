@@ -1,16 +1,11 @@
-import { IPointName } from "./types";
-import { CenterPoint, CornerPoint, MidPoint, XNames, YNames } from "./enums";
+import {CenterPoint, CornerPoint, IPointName, MidPoint, XName, YName} from "./types";
 
-const XNAMES = ["x1", "x2", "xmid"];
-
-const YNAMES = ["y1", "y2", "ymid"];
-
-export const isXName = (name: XNames | YNames): name is XNames => {
-  return XNAMES.includes(name);
+export const isXName = (name: XName | YName): name is XName => {
+  return ["x1", "x2", "xmid"].includes(name);
 };
 
-export const isYName = (name: XNames | YNames): name is XNames => {
-  return YNAMES.includes(name);
+export const isYName = (name: XName | YName): name is XName => {
+  return ["y1", "y2", "ymid"].includes(name);
 };
 
 export const isCenterX = (

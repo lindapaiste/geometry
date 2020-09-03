@@ -23,3 +23,7 @@ export const toRectangleClass = (obj: IRectangle): ImmutableRectangle => {
         return new ImmutableRectangle(obj);
     }
 }
+
+/**
+ * convert tuple to IPointName
+ */

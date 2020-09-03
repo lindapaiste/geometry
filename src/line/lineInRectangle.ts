@@ -1,7 +1,7 @@
 import {IRectangle} from "..";
 import {LineDef} from "./types";
 import Segment from "./Segment";
-import {toRectangleClass} from "../rectangle/util";
+import {toRectangleClass} from "../rectangle/convert";
 import Line from "./Line";
 
 /**

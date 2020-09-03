@@ -1,7 +1,6 @@
 import ImmutableRectangle from "./ImmutableRectangle";
-import { XNames, YNames } from "../rectanglePoints/enums";
 import { IXYRangeMethods } from "../range/types";
-import { IPointName, IRectanglePoint } from "..";
+import {IPointName, IRectanglePoint, XName, YName} from "..";
 import { isXName } from "../rectanglePoints/booleans";
 import { midpointSide } from "../rectanglePoints/midpointsSides";
 
@@ -127,7 +126,7 @@ export default class BoundedRectangle {
 
   stretchToWidth = (
     width: number,
-    fixedProperty?: XNames
+    fixedProperty?: XName
   ): ImmutableRectangle => {
     return this.stretchBack(
       this.rectangle.stretchToWidth(width, fixedProperty)
@@ -136,7 +135,7 @@ export default class BoundedRectangle {
 
   stretchToHeight = (
     height: number,
-    fixedProperty?: YNames
+    fixedProperty?: YName
   ): ImmutableRectangle => {
     return this.stretchBack(
       this.rectangle.stretchToHeight(height, fixedProperty)

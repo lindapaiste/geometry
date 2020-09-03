@@ -1,34 +1,30 @@
 import MutableRectangle from '../src/rectangle/MutableRectangle';
-
-const pure = (Rectangle) => {
-    const {x1,y1,x2,y2} = Rectangle;
-    return {x1, y1, x2, y2};
-};
+import {toRectangleProps} from "../src/rectangle";
 
 
 test('create a 500x750 rectangle', () => {
     const rect = new MutableRectangle(500, 750, 0, 0);
-    expect( pure( rect) )
-        .toEqual({x1: 0, x2: 500, y1: 0, y2: 750});
+    expect( toRectangleProps( rect) )
+        .toEqual({width: 500, height: 750, x: 0, y: 0});
 });
 
 test('set Rectangle x', () => {
     const rect = new MutableRectangle(500, 750, 0, 0);
     rect.x = 1000;
-    expect( pure(rect) )
-        .toEqual( pure(new MutableRectangle(500, 750, 1000, 0)));
+    expect( toRectangleProps(rect) )
+        .toEqual( toRectangleProps(new MutableRectangle(500, 750, 1000, 0)));
 });
 
 test('set Rectangle xmid', () => {
     const rect = new MutableRectangle(500, 750, 0, 0);
     rect.xmid = 1000;
-    expect( pure(rect) )
-        .toEqual( pure( new MutableRectangle(500, 750, 750, 0)));
+    expect( toRectangleProps(rect) )
+        .toEqual( toRectangleProps( new MutableRectangle(500, 750, 750, 0)));
 });
 
 test('set Rectangle width', () => {
     const rect = new MutableRectangle(500, 750, 0, 0);
     rect.width = 1000;
-    expect( pure(rect) )
-        .toEqual( pure( new MutableRectangle(1000, 750, -250, 0)));
+    expect( toRectangleProps(rect) )
+        .toEqual( toRectangleProps( new MutableRectangle(1000, 750, -250, 0)));
 });

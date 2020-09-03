@@ -11,11 +11,7 @@ import {
 /**
  * filter an array of sizes to only those that match the given aspect ratio
  */
-export const getAspectRatioSizes = (
-  objects: ISized[],
-  ratio: number
-): ISized[] => {
-  // return objects.filter( obj => getAspectRatio(obj) === ratio);
+export const getAspectRatioSizes = (objects: ISized[], ratio: number): ISized[] => {
   return objects.filter(isAspectRatio(ratio));
 };
 /**

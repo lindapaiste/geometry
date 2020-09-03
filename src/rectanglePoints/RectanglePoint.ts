@@ -1,19 +1,17 @@
-import {XNames, YNames} from "./enums";
-import {PointNameTuple} from "./name-tuples";
-import {IPointName, IRectanglePoint} from "./types";
+import {IPointName, IRectanglePoint, PointNameTuple, XName, YName} from "./types";
 import {oppositePointName} from "./opposites";
 
 /**
  * each point has x and y coordinates and also a name determining where it is on the rectangle
  * the primary purpose of this class is to facilitate getting the name/location of the opposite point
- * but that calculation is all static
+ * but now that calculation is all static, so this class is no longer useful
  */
 
 export default class RectanglePoint implements IRectanglePoint {
     public readonly x: number;
     public readonly y: number;
-    public readonly xName: XNames;
-    public readonly yName: YNames;
+    public readonly xName: XName;
+    public readonly yName: YName;
     public readonly opposite: IPointName;
 
     constructor(props: IRectanglePoint) {
