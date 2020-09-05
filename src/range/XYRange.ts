@@ -1,37 +1,31 @@
-import {NumericRange} from "./NumericRange";
-import {ICoordinates} from "../rectangle/types";
-import {IDefinedXYRange, INumericRange, IXYRange, IXYRangeMethods} from "./types";
-import {IPoint} from "../points";
+import NumericRange from "./NumericRange";
+import {HasCoordinates, ICoordinates, isInvertedCoords} from "../rectangle";
+import {CombinableRange, HasRangesXY, XYRangeMethods, Range} from "./types";
+import {IPoint, XY} from "../points";
+import {ISized} from "../sized";
+import {toXYRange} from "./convert";
 
 /**
  * XY range is allowed to be open in any direction
  * all Rectangles are XYRanges, but not all XYRanges are Rectangles
  * it is only a rectangle if it is closed on all four sides
  */
-export default class XYRange
-    implements Partial<ICoordinates>, IXYRange, IXYRangeMethods {
+export default class XYRange implements HasCoordinates, HasRangesXY, XYRangeMethods, ISized, CombinableRange<XY>, Range<XY> {
     /**
      * not sure if there is much purpose in storing the x1s,
      * but it allows for an object to be constructed from another object
      */
-    public readonly x1: number | undefined;
-    public readonly x2: number | undefined;
-    public readonly y1: number | undefined;
-    public readonly y2: number | undefined;
-    public readonly rangeX: INumericRange;
-    public readonly rangeY: INumericRange;
+    public readonly rangeX: NumericRange;
+    public readonly rangeY: NumericRange;
 
     /**
      * can construct from a Rectangle class or an object of props
      */
     constructor(coordinates: Partial<ICoordinates>) {
-        this.x1 = coordinates.x1;
-        this.x2 = coordinates.x2;
-        this.y1 = coordinates.y1;
-        this.y2 = coordinates.y2;
+        const {x1, x2, y1, y2} = coordinates;
 
-        this.rangeX = new NumericRange(this.x1, this.x2);
-        this.rangeY = new NumericRange(this.y1, this.y2);
+        this.rangeX = new NumericRange(x1, x2);
+        this.rangeY = new NumericRange(y1, y2);
     }
 
     containsX(value: number): boolean {
@@ -68,7 +62,66 @@ export default class XYRange
     /**
      * check whether all four sides have values
      */
-    isDefined = (): this is this & Required<ICoordinates> & IDefinedXYRange => {
-        return this.rangeX.isDefined() && this.rangeY.isDefined();
+    isFinite = (): boolean => {
+        return this.rangeX.isFinite() && this.rangeY.isFinite();
     };
+
+    get width(): number {
+        return this.rangeX.width;
+    }
+
+    get height(): number {
+        return this.rangeY.width;
+    }
+
+    get coordinates(): ICoordinates {
+        return {
+            x1: this.rangeX.min,
+            x2: this.rangeX.max,
+            y1: this.rangeY.min,
+            y2: this.rangeY.max,
+        }
+    }
+
+    get min(): XY {
+        return {
+            x: this.rangeX.min,
+            y: this.rangeY.min
+        }
+    }
+
+    get max(): XY {
+        return {
+            x: this.rangeX.max,
+            y: this.rangeY.max
+        }
+    }
+
+    hasOverlap(range: Range<XY>): boolean {
+        const obj = toXYRange(range);
+        return this.rangeX.hasOverlap(obj.rangeX) && this.rangeY.hasOverlap(obj.rangeY);
+    }
+
+    union(range: Range<XY>): XYRange | null {
+        // should the union exist when there is no overlap? aka disjoint union
+        // illustrated https://media.cheggcdn.com/media%2F0c1%2F0c15e9b5-ca8d-48f5-af67-cdd4fddc2dae%2FphpxrSUt7.png
+
+        return new XYRange({
+            x1: Math.min(this.min.x, range.min.x),
+            x2: Math.max(this.max.x, range.max.x),
+            y1: Math.min(this.min.y, range.min.y),
+            y2: Math.max(this.max.y, range.max.y),
+        })
+    }
+
+    intersection(range: Range<XY>): XYRange | null {
+        const coords = {
+            x1: Math.max(this.min.x, range.min.x),
+            x2: Math.min(this.max.x, range.max.x),
+            y1: Math.max(this.min.y, range.min.y),
+            y2: Math.min(this.max.y, range.max.y),
+        };
+
+        return isInvertedCoords(coords) ? null : new XYRange(coords);
+    }
 }

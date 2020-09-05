@@ -1,12 +1,14 @@
-import {INumericRange, IRange} from "./types";
+import {CombinableRange, Range, RangeMethods} from "./types";
+import {PropWidth} from "../sized";
+import {fixPartialRange, numbersToRange} from "./convert";
 
 /**
- * use generics to define if the range is open-ended or not
+ * a numeric range can be open-ended on one or both ends, but the min and max will always be a number because it will
+ * be positive or negative Infinity instead of undefined
  */
-export class NumericRange<Min extends number | undefined,
-    Max extends number | undefined> implements Partial<IRange>, INumericRange {
-    public readonly max: Max;
-    public readonly min: Min;
+export default class NumericRange implements Range, RangeMethods, CombinableRange, PropWidth {
+    public readonly max: number;
+    public readonly min: number;
 
     /**
      * a Range can be open on either or both ends
@@ -15,9 +17,16 @@ export class NumericRange<Min extends number | undefined,
      * @param {number} [min] -- the range minimum
      * @param {number} [max] -- the range maximum
      */
-    constructor(min: Min, max: Max) {
+    constructor(min: number = -Infinity, max: number = Infinity) {
         this.min = min;
         this.max = max;
+    }
+
+    /**
+     * convert a min and max object into a numeric range class
+     */
+    public static fromRange({min, max}: Partial<Range>): NumericRange {
+        return new NumericRange(min, max);
     }
 
     /**
@@ -25,121 +34,94 @@ export class NumericRange<Min extends number | undefined,
      * known, can pass in any order and know which is the min and the max by comparing them.  Can also accept more than
      * two numbers, and any in the middle are simply ignored.
      */
-    public static fromNumbers(...numbers: number[]): NumericRange<number, number> {
-        return new NumericRange<number, number>( Math.min(...numbers), Math.max(...numbers) );
+    public static fromNumbers(...numbers: number[]): NumericRange {
+        return NumericRange.fromRange(numbersToRange(...numbers));
     }
 
     /**
-     * @return {boolean}
+     * true if the range min is a finite number, aka not -Infinity, Infinity, or NaN
      */
     hasMin(): this is this & { min: number } {
-        return this.min !== undefined;
+        return isFinite(this.min);
     }
 
     /**
-     * @return {boolean}
+     * true if the range max is a finite number
      */
     hasMax(): this is this & { max: number } {
-        return this.max !== undefined;
+        return isFinite(this.max );
     }
 
     /**
-     * @return {boolean}
+     * true if both the min and max are finite numbers
      */
-    isDefined(): this is this & IRange {
+    isFinite(): this is this & Range {
         return this.hasMin() && this.hasMax();
     }
 
-    /** boolean of whether the given number is inside the range
-     *
-     * @param {number} value
-     * @return {boolean}
+    /**
+     * width is the distance between the max and min if both are defined, or infinity otherwise
+     */
+    get width(): number {
+        return this.max - this.min;
+    }
+
+    /**
+     * boolean of whether the given number is inside the range, including the endpoints
      */
     contains(value: number): boolean {
         return !(this.isTooLarge(value) || this.isTooSmall(value));
     }
 
-    /** boolean of whether the given number is too large to fit inside the range
-     *
-     * @param {number} value
-     * @return {boolean}
+    /**
+     * boolean of whether the given number is too large to fit inside the range
      */
     isTooLarge(value: number): boolean {
-        return this.hasMax() && value > this.max;
+        return value > this.max;
     }
 
-    /** boolean of whether the given number is too small to fit inside the range
-     *
-     * @param {number} value
-     * @return {boolean}
+    /**
+     * boolean of whether the given number is too small to fit inside the range
      */
     isTooSmall(value: number): boolean {
-        return this.hasMin() && value < this.min;
+        return value < this.min;
     }
 
-    /** force values that are outside the range into the nearest edge
-     *
-     * @param {number} value
-     * @return {number}
+    /**
+     * force values that are outside the range into the nearest edge
      */
     constrain(value: number): number {
-        if (this.hasMin()) {
-            value = Math.max(value, this.min);
-        }
-        if (this.hasMax()) {
-            value = Math.min(value, this.max);
-        }
-        return value;
+        value = Math.max(value, this.min);
+        return Math.min(value, this.max);
     }
 
     /**
      * helper for union and intersection, determines whether there is any overlap between the ranges
-     *
-     * @param {Range} range
-     * @return boolean
      */
-    hasOverlap(range: INumericRange): boolean {
+    hasOverlap(range: Partial<Range>): boolean {
         // no overlap when this.max < range.min or this.min > range.max
-        return !(
-            (this.hasMax() && range.hasMin() && this.max < range.min) ||
-            (this.hasMin() && range.hasMax() && this.min > range.max)
-        );
+        const {min, max} = fixPartialRange(range);
+        return !(this.max < min || this.min > max);
     }
 
-    /** returns a new Range representing the intersection of the given the range and the current range
+    /**
+     * returns a new Range representing the intersection of the given the range and the current range
      * or null if there is no overlap
-     *
-     * @param {Range} range
-     * @return {Range|null}
      */
-    intersection(range: INumericRange): INumericRange | null {
+    intersection(range: Partial<Range>): NumericRange | null {
         if (!this.hasOverlap(range)) return null;
-        // cannot use constrain function on undefined values
-        const min = range.hasMin() ? this.constrain(range.min) : this.min;
-        const max = range.hasMax() ? this.constrain(range.max) : this.max;
-        return new NumericRange(min, max);
+        const {min, max} = fixPartialRange(range);
+        return new NumericRange(this.constrain(min), this.constrain(max));
     }
 
-    /** returns a new Range representing the union of the given the range and the current range
+    /**
+     * returns a new Range representing the union of the given the range and the current range
      * or null if the ranges do not overlap
-     *
-     * @param {Range} range
-     * @return {Range|null}
      */
-    union(range: INumericRange): INumericRange | null {
+    union(range: Partial<Range>): NumericRange | null {
         if (!this.hasOverlap(range)) return null;
-        // if either value is undefined, then the result is open ended
-        const min =
-            range.hasMin() && this.hasMin()
-                ? Math.min(range.min, this.min)
-                : undefined;
-        const max =
-            range.hasMax() && this.hasMax()
-                ? Math.max(range.max, this.max)
-                : undefined;
-        return new NumericRange(min, max);
+        const {min, max} = fixPartialRange(range);
+        return new NumericRange(Math.min(min, this.min), Math.max(max, this.max));
     }
 }
 
-// is both named and default export
-export default NumericRange;

@@ -1,5 +1,5 @@
 import {Limits} from "./types";
-import {INumericRange} from "..";
+import {RangeMethods} from "..";
 
 export default class ScaleCalculator<Scalable extends string,
     OT extends Record<Scalable, number>> {
@@ -60,7 +60,7 @@ export default class ScaleCalculator<Scalable extends string,
      */
     calcScalePropertyToRange(
         propertyName: Scalable,
-        range: INumericRange
+        range: RangeMethods
     ): number {
         const currentValue = this._currentValue(propertyName);
         // console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently

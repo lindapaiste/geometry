@@ -19,6 +19,8 @@ export const MIDPOINTS: (IPointName & MidPoint)[] = [
     {xName: "xmid", yName: "y2"},
 ];
 
+export const ALL_POINTS: IPointName[] = [...CORNERS, ...MIDPOINTS, CENTER];
+
 export const XNAMES: XName[] = ["x1", "x2", "xmid"];
 
 export const YNAMES: YName[] = ["y1", "y2", "ymid"];

@@ -1,5 +1,6 @@
-import {IRectangle} from "./types";
+import {ICoordinates, IRectangle} from "./types";
 import ImmutableRectangle from "./ImmutableRectangle";
+import {ISized} from "../sized";
 
 /**
  * extract just the I_Rectangle props so that it doesn't matter if it's an entire class implementing I_Rectangle (which
@@ -24,6 +25,21 @@ export const toRectangleClass = (obj: IRectangle): ImmutableRectangle => {
     }
 }
 
+
+export const coordsToRect = (coords: ICoordinates): IRectangle => {
+    return ImmutableRectangle.fromCoordinates(coords);
+}
+
+export const rectToCoords = (rect: IRectangle): ICoordinates => {
+    return new ImmutableRectangle(rect);
+}
+
 /**
- * convert tuple to IPointName
+ * does a rectangle or a set of coordinates have a negative width or height
  */
+export const isInvertedRect = ({width, height}: ISized) => {
+    return width < 0 || height < 0;
+}
+export const isInvertedCoords = ({x1, x2, y1, y2}: ICoordinates) => {
+    return x1 > x2 || y1 > y2;
+}

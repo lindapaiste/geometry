@@ -1,6 +1,6 @@
 import ScaleCalculator from "./ScalableCalculator";
 import {IScalableObject, Limits} from "./types";
-import {INumericRange} from "..";
+import {RangeMethods} from "..";
 
 /**
  * create a clone of an object which is scaled to size
@@ -68,7 +68,7 @@ export default class ScaledVersionCreator<Scalable extends string,
         );
     }
 
-    scalePropertyToRange(propertyName: Scalable, range: INumericRange): OT {
+    scalePropertyToRange(propertyName: Scalable, range: RangeMethods): OT {
         return this.scale(
             this.calculator.calcScalePropertyToRange(propertyName, range)
         );

@@ -1,5 +1,6 @@
-import {IPointName, XCenter, XName, XSide, YCenter, YName, YSide} from "./types";
+import {IPointName} from "./types";
 import {isXName} from "./booleans";
+import {XCenter, XName, XSide, YCenter, YName, YSide} from "./types";
 
 // note: could use string manipulation here to combine logic between x and y, but would lose the type inference
 

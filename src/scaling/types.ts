@@ -1,4 +1,4 @@
-import { INumericRange } from "..";
+import {RangeMethods} from "..";
 
 /**
  * define a scalable object as one with a scale() method
@@ -26,7 +26,7 @@ export interface IScalableObject<
 
   scalePropertyToValue(propertyName: Scalable, value: number): OT;
 
-  scalePropertyToRange(propertyName: Scalable, range: INumericRange): OT;
+  scalePropertyToRange(propertyName: Scalable, range: RangeMethods<number>): OT;
 
   scaleToFit(propertyMaximums: Limits<Scalable>): OT;
 

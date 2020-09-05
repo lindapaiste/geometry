@@ -1,6 +1,6 @@
 import NumericRange from "../range/NumericRange";
 import ScaledVersionCreator from "../scaling/ScaledVersion";
-import {INumericRange} from "..";
+import {INumericRangeMethods} from "..";
 
 export interface TextResizerProps {
     text: string,
@@ -48,7 +48,7 @@ export const fitTextToSize = (props: TextResizerProps): TextSize => {
 
     let textSize = createTextSize(text, fontName, baseSize, windowWidth);
 
-    const getScaledToProperty = (property: keyof TextSize, range: INumericRange): TextSize => {
+    const getScaledToProperty = (property: keyof TextSize, range: INumericRangeMethods): TextSize => {
         // need to create a new calculator after each change in order to apply changes to the previously edited
         const scaleCalc = new ScaledVersionCreator(['width', 'vw', 'fontSize'], textSize);
         return scaleCalc.scalePropertyToRange(property, range);

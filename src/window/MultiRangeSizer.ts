@@ -1,11 +1,11 @@
 import { IScalable, ObjToLimits } from "./types";
-import { INumericRange } from "..";
+import { INumericRangeMethods } from "..";
 import NumericRange from "../range/NumericRange";
 
 interface StoredLimit<T> {
   property: keyof T;
   basis?: number;
-  range: INumericRange;
+  range: INumericRangeMethods;
 }
 
 export default class MultiRangeSizer<T extends Record<any, number>> {

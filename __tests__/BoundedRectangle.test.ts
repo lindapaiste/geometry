@@ -1,5 +1,5 @@
 import ImmutableRectangle from "../src/rectangle/ImmutableRectangle";
-import BoundedRectangle from "../src/rectangle/BoundedRectangle";
+import BoundedRectangle from "../src/rectangleConstraints/BoundedRectangle";
 import {toRectangleProps} from "../src/rectangle/convert";
 
 const original = new ImmutableRectangle({

@@ -1,5 +1,5 @@
 import {Limits} from "./types";
-import {IRangeMethods} from "../range/types";
+import {RangeMethods} from "../range/types";
 
 /**
  * this class can handle scaling of any values, not just height and width
@@ -73,7 +73,7 @@ export default class ScalableBaseCalc<Scalable extends string> {
      */
     calcScalePropertyToRange(
         propertyName: Scalable,
-        range: IRangeMethods<number>
+        range: RangeMethods<number>
     ): number {
         const currentValue = this._currentValue(propertyName);
         // console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently

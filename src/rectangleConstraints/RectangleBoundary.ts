@@ -1,20 +1,26 @@
-import {IRangeMethods} from "../range";
-import ImmutableRectangle from "./ImmutableRectangle";
+import {RangeMethods} from "../range";
+import ImmutableRectangle from "../rectangle/ImmutableRectangle";
 import {isXName} from "../rectanglePoints/booleans";
 import {midpointSide} from "../rectanglePoints/midpointsSides";
-import {IPoint} from "..";
+import {IPoint, ISized} from "../index";
+import {fits} from "../sized/sized-util";
+import {oppositePointName} from "../rectanglePoints/opposites";
 
 /**
  * an XY Range which can contain or constrain Rectangle objects rather than Points
  *
+ * contains is simple true or false and properties of the rectangle don't matter
+ *
+ * in order to force containment of a rectangle, need to know the methods available for containment, eg. shift, scale, stretch
+ * for scale and stretch, may also want to know the fixed point basis
+ *
  * copy-and-pasting from BoundedRectangle for now
  * not sure how these will relate in the future
  */
-export default class RectangleBoundary
-    implements IRangeMethods<ImmutableRectangle> {
-    public readonly boundary: IRangeMethods<IPoint>;
+export default class RectangleBoundary implements RangeMethods<ImmutableRectangle> {
+    public readonly boundary: RangeMethods<IPoint> & ISized;
 
-    constructor(boundary: IRangeMethods<IPoint>) {
+    constructor(boundary: RangeMethods<IPoint> & ISized) {
         this.boundary = boundary;
     }
 
@@ -34,6 +40,13 @@ export default class RectangleBoundary
             case "stretch":
                 return this.stretchBack(value);
         }
+    }
+
+    /**
+     * does this rectangle need to be stretched or scaled back to fit, or is just shifting enough?
+     */
+    isTooLarge(value: ISized): boolean {
+        return fits(this.boundary)(value);
     }
 
     /**
@@ -76,7 +89,7 @@ export default class RectangleBoundary
                 const constrained = this.boundary.constrain(point);
                 const side = midpointSide(point);
                 const value = isXName(side) ? constrained.x : constrained.y;
-                return r.scaleToSide(value, side);
+                return r.scaleToSide(value, side, oppositePointName(point));
             }
         }, rect);
     };

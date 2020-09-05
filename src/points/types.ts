@@ -3,6 +3,8 @@ export interface IPoint {
     y: number;
 }
 
+export interface XY extends IPoint {}
+
 export type PointTuple = [number, number];
 
 export type EitherPoint = IPoint | PointTuple;

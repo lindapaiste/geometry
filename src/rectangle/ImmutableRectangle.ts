@@ -1,7 +1,7 @@
 import RectanglePoint from "../rectanglePoints/RectanglePoint";
-import {ICoordinates, IRectangle} from "./types";
+import {ICoordinates, HasCoordinates, IRectangle, RectangleValues} from "./types";
 import XYRange from "../range/XYRange";
-import {IXYRangeMethods} from "../range";
+import {XYRangeMethods} from "../range";
 import {
     CenterPoint,
     CornerPoint,
@@ -10,20 +10,18 @@ import {
     IRectanglePoint,
     ISized,
     MidPoint,
-    PointNameTuple,
-    Side,
-    XName,
-    YName
+    PointNameTuple, Side,
+    XName, YName
 } from "..";
 import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
-import {isCenter, isCenterX, isMidpoint, isXName} from "../rectanglePoints/booleans";
+import {isCenter, isMidpoint, isXName} from "../rectanglePoints/booleans";
 import {midpointSide} from "../rectanglePoints/midpointsSides";
 import {CENTER, CORNERS, MIDPOINTS} from "../rectanglePoints/pointConstants";
 
 /**
  * has all of the same editing functions, but always returns a new object
  */
-export default class ImmutableRectangle implements IPoint, ISized, ICoordinates, IRectangle, IXYRangeMethods {
+export default class ImmutableRectangle implements IPoint, ISized, ICoordinates, HasCoordinates, IRectangle, XYRangeMethods, RectangleValues {
     public readonly range: XYRange;
 
     /**
@@ -168,67 +166,66 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
 // ----------------------------MOVING--------------------------//
 
     /**
+     * Root shift method an apply a change in both the x and y directions
+     */
+    shift = ({x = 0, y = 0}: Partial<IPoint>): ImmutableRectangle => {
+        return this._alteredProps({
+            x: this.x + x,
+            y: this.y + y
+        });
+    };
+    /**
      * moves along the x-axis without changing size
      */
     shiftX = (change: number): ImmutableRectangle => {
-        return this._alteredProps({
-            x: this.x + change,
-        });
+        return this.shift({x: change});
     };
     /**
      * moves along the y-axis without changing size
      */
     shiftY = (change: number): ImmutableRectangle => {
-        return this._alteredProps({
-            y: this.y + change,
-        });
+        return this.shift({y: change});
     };
     /**
      * shift a particular x property (x1, x2, xmid) to a new value
      */
-    shiftToX = (value: number, fixedProperty: XName): ImmutableRectangle => {
+    shiftToX = (value: number, fixedProperty: XName = "x1"): ImmutableRectangle => {
         const current = this[fixedProperty];
         return this.shiftX(value - current);
     };
     /**
      * shift a particular y property (y1, y2, ymid) to a new value
      */
-    shiftToY = (value: number, fixedProperty: YName): ImmutableRectangle => {
+    shiftToY = (value: number, fixedProperty: YName = "y1"): ImmutableRectangle => {
         const current = this[fixedProperty];
         return this.shiftY(value - current);
     };
-    shift = (changeX: number = 0, changeY: number = 0): ImmutableRectangle => {
-        return this.shiftX(changeX).shiftY(changeY);
+    /**
+     * Shifts the rectangle such that it includes the given named point with the given values.
+     */
+    shiftToPoint = (point: IRectanglePoint): ImmutableRectangle => {
+        const current = this.getPoint(point);
+        return this.shift({
+            x: point.x - current.x,
+            y: point.y - current.y
+        });
     };
     /**
-     * need to use a separate function and not just a setter in order to accept a
-     * type that is different than the return type of a classes RectanglePoint
+     * Shift the center point of a rectangle. A specific instance of shiftToPoint.
      */
     setCenter = (point: IPoint): ImmutableRectangle => {
         return this.shiftToPoint({...point, ...CENTER});
     };
 
-    /**
-     * keeps the height and width the same, but shifts the rectangle such that it includes the given named point
-     */
-    shiftToPoint = (point: IRectanglePoint): ImmutableRectangle => {
-        const current = this.getPoint(point);
-        return this.shift(point.x - current.x, point.y - current.y);
-    };
-
 // ----------------------------SCALING--------------------------//
 
     /**
-     * scaling determines the width and height values
-     * pass in an I_RectanglePoint and use that point to determine the x and y
-     * create a new rectangle of the right size and moves it such that it shares that point
-     *
-     * if no point is passed, defaults to moving from the center
-     *
-     * this function is a lot simpler with immutable objects because
-     * each value can be dealt with individually without any changes to the others
+     * The scale value determines the width and height of the new rectangle. Pass in an fixedPoint name and use that
+     * point to determine the x and y positions of the new rectangle such that the fixedPoint keeps its same position.
+     * If no point is passed, defaults to moving from the center
      */
-    scale = (float: number, fixedPoint: IPointName = this.center): ImmutableRectangle => {
+    scale = (float: number, fixedPoint: IPointName = CENTER): ImmutableRectangle => {
+        // create a new rectangle of the right size and move it such that it shares the fixed point
         return this._alteredProps({
             width: this.width * float,
             height: this.height * float,
@@ -259,7 +256,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
      * can pass a fixedPoint if top or bottom is preferred. Not all values of fixedPoint make sense, such as scaling
      * from a point on the side which is being scaled to.
      */
-    scaleToSide = (value: number, side: Side, fixedPoint: IPointName = this.center): ImmutableRectangle => {
+    scaleToSide = (value: number, side: Side, fixedPoint: IPointName = CENTER): ImmutableRectangle => {
         const current = this[side];
         const opposite = this[oppositeName(side)];
         // doesn't need Math.abs because if subtracting x1 - x2, both will be negative and the result positive (unless
@@ -291,8 +288,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
         } else {
             // isCorner
             /**
-             * look at the stretched rectangle to get the scale in both directions
-             * and apply the average of the two
+             * look at the stretched rectangle to get the scale in both directions and apply the average of the two
              */
             const stretched = this.stretchToPoint(point);
             const scaleX = stretched.width / this.width;
@@ -335,7 +331,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
      *
      * The position of the newly-sized rectangle is based on prop "fixedPoint", which defaults to the center.
      */
-    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint: IPointName = this.center): ImmutableRectangle => {
+    stretchToRatio = (ratio: number, preserve?: "width" | "height" | "area", fixedPoint: IPointName = CENTER): ImmutableRectangle => {
         if (preserve === "width") {
             return this.stretchToHeight(this.width / ratio, fixedPoint.yName);
         } else if (preserve === "height") {

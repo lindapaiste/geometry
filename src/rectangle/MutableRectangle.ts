@@ -1,4 +1,4 @@
-import {ICoordinates, IRectangle} from "./types";
+import {ICoordinates, IRectangle, RectangleValues} from "./types";
 import {IPoint, ISized} from "..";
 
 /**
@@ -9,7 +9,7 @@ import {IPoint, ISized} from "..";
  * access them
  */
 export default class MutableRectangle
-    implements IPoint, ISized, ICoordinates, IRectangle {
+    implements IPoint, ISized, ICoordinates, IRectangle, RectangleValues {
     public x1: number;
     public x2: number;
     public y1: number;

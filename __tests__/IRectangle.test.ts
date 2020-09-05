@@ -51,7 +51,7 @@ test("shifting rectangle should preserve size", () => {
         expect(shifted[name]).toEqual(100);
     });
 
-    expect(initial.shift(50, 100).props).toEqual({
+    expect(initial.shift({x: 50, y: 100}).props).toEqual({
         x: 50,
         y: 100,
         width: 500,

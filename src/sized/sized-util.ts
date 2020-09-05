@@ -3,10 +3,10 @@ import {ISized, PropHeight, PropWidth} from "./types";
 // ----------------------COMPUTED PROPERTIES-------------------------- //
 
 /**
- * any sized object has an aspect ratio, unless the height is 0
+ * any sized object has an aspect ratio
+ * will be Infinity if height is 0
  */
-export const getAspectRatio = (obj: ISized): number | undefined =>
-    obj.height === 0 ? undefined : obj.width / obj.height;
+export const getAspectRatio = (obj: ISized): number => obj.width / obj.height;
 
 export const getArea = (obj: ISized): number => obj.width * obj.height;
 
@@ -38,7 +38,7 @@ export const returnSmaller = <T extends ISized>(a: T, b: T): T =>
  */
 export const isAspectRatio = (ratio: number, maxPixelDiff: number = 1) => (obj: ISized): boolean => {
     const expectedHeight = obj.width / ratio;
-    return isSameValue( expectedHeight, obj.height, maxPixelDiff);
+    return isSameValue(expectedHeight, obj.height, maxPixelDiff);
 };
 
 /**
@@ -79,8 +79,15 @@ export const exceedsEither = (target: Partial<ISized>) => (object: ISized): bool
 
 // ----------------------ERROR MARGIN HELPERS-------------------------- //
 
-export const isSameValue = (a: number, b: number, margin: number = 0) => {
-    return Math.abs(b - a ) <= margin;
+/**
+ * allows for either a or b to be undefined, but will return false is either or both are not defined numbers
+ */
+export const isSameValue = (a?: number, b?: number, margin: number = 0) => {
+    return a !== undefined && b !== undefined && isSameNumber(a, b, margin);
+}
+
+export const isSameNumber = (a: number, b: number, margin: number = 0) => {
+    return Math.abs(b - a) <= margin;
 }
 
 export const isWithinMargin = (value: number, margin: number) => {
@@ -106,6 +113,12 @@ export const isSameHeight = (a: PropHeight, b: PropHeight, margin: number = .01)
 
 export const isSameSize = (a: ISized, b: ISized, margin: number = .01): boolean => {
     return isSameWidth(a, b, margin) && isSameHeight(a, b, margin);
+}
+
+export const isSameAspectRatio = (a: ISized, b: ISized, margin?: number): boolean => {
+    const ratio = getAspectRatio(a);
+    const pixelDiff = margin === undefined ? undefined : margin * a.width;
+    return isAspectRatio(ratio, pixelDiff)(b);
 }
 
 /*
