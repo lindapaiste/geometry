@@ -1,5 +1,6 @@
-import {covers, fits, isAspectRatio, returnLarger, returnSmaller,} from "./sized-util";
-import {ISized} from "./types";
+import {covers, fits, returnLarger, returnSmaller,} from "./compare";
+import {Sized} from "../coreTypes";
+import {isAspectRatio} from "./compute";
 
 /**
  * define a generic SizeFinder class which holds either a plain array or a keyed object
@@ -13,7 +14,7 @@ import {ISized} from "./types";
  * but if none is provided it will be computed from the largest size, assuming that thumbnails
  * may use a different ratio but the full size is the "true" ratio
  */
-export default class SizeFinder<T extends ISized> {
+export default class SizeFinder<T extends Sized> {
     public readonly aspectRatio: number;
     public readonly sizes: Record<string | number, T>;
 
@@ -73,7 +74,7 @@ export default class SizeFinder<T extends ISized> {
      * and returns the largest available size if none are large enough to cover
      * aspect ratio does not matter as it will be cut off anyways
      */
-    getCoverSize = (target: Partial<ISized>): T => {
+    getCoverSize = (target: Partial<Sized>): T => {
         // not the most efficient because it loops through twice, but it is clean
         const coverSizes = this.sizeArray.filter(covers(target));
         return coverSizes.length
@@ -86,7 +87,7 @@ export default class SizeFinder<T extends ISized> {
      * EITHER the height or the width is larger than the target
      * if only one dimension is defined, want to exceed that dimension, not just exceed the undefined one
      */
-    getContainSize = (target: Partial<ISized>): T => {
+    getContainSize = (target: Partial<Sized>): T => {
         const okSizes = this.sizeArray.filter((size) => !fits(target)(size));
         return okSizes.length
             ? okSizes.reduce(returnSmaller)

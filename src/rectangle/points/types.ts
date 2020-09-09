@@ -1,5 +1,3 @@
-import {IPoint} from "..";
-
 export type XSide = "x1" | "x2";
 export type YSide = "y1" | "y2";
 export type Side = XSide | YSide;
@@ -41,7 +39,7 @@ export type PointNameTuple = [XName, YName];
 
 // -----------------------POINT = NAMES + VALUES ----------------------- //
 
-export interface IRectanglePoint extends IPoint, IPointName {
+export interface IRectanglePoint extends IPointName {
   x: number;
   y: number;
   xName: XName;

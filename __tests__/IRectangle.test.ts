@@ -1,8 +1,8 @@
 import ImmutableRectangle from "../src/rectangle/ImmutableRectangle";
-import {toRPointProps} from "../src/rectanglePoints/convert";
-import {IRectanglePoint} from "../src/rectanglePoints";
-import {isSameSize} from "../src/sized/sized-util";
-import {CENTER, XNAMES, YNAMES} from "../src/rectanglePoints/pointConstants";
+import {toRPointProps} from "../src/rectangle/points/convert";
+import {IRectanglePoint} from "../src/rectangle/points";
+import {isSameSize} from "../src/sized/compare";
+import {CENTER, XNAMES, YNAMES} from "../src/rectangle/points/constants";
 
 const initial = new ImmutableRectangle({
     x: 0,
@@ -216,19 +216,21 @@ test("can force a rectangle to a specific aspect ratio", () => {
         height: 250,
     })
 
-    // use a different example for preserve area which has cleaner numbers, 12 x 3 -> 6 x 6
-    const before = new ImmutableRectangle({
+    // use a different example for preserve area which has cleaner numbers, 12 x 3 -> 6 x 6, centered at (0,0)
+    const long = new ImmutableRectangle({
         width: 12,
         height: 3,
         x: -6,
         y: -1.5
     })
-    expect(before.stretchToRatio(1, "area", CENTER).props).toEqual({
+    const square = new ImmutableRectangle({
         width: 6,
         height: 6,
         x: -3,
         y: -3
     })
+    expect(long.stretchToRatio(1, "area", CENTER).props).toEqual(square.props);
+    expect(square.stretchToRatio(4, "area", CENTER).props).toEqual(long.props);
 });
 
 test("can set a rectangle's x1, x2, y1, or y2 while preserving the aspect ratio", () => {

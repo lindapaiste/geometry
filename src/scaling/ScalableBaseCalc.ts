@@ -1,5 +1,5 @@
 import {Limits} from "./types";
-import {RangeMethods} from "../range/types";
+import {RangeMethods} from "../range";
 
 /**
  * this class can handle scaling of any values, not just height and width
@@ -8,7 +8,7 @@ import {RangeMethods} from "../range/types";
  * but if just given a set of properties, can still compute the scale
  * so break into two classes
  */
-export default class ScalableBaseCalc<Scalable extends string> {
+export default class ScalableBaseCalc<Scalable extends keyof any> {
     /**
      * array of strings of the properties which need to be kept in scale
      */

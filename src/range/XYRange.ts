@@ -1,16 +1,16 @@
 import NumericRange from "./NumericRange";
-import {HasCoordinates, ICoordinates, isInvertedCoords} from "../rectangle";
-import {CombinableRange, HasRangesXY, XYRangeMethods, Range} from "./types";
-import {IPoint, XY} from "../points";
-import {ISized} from "../sized";
+import {isInvertedCoords} from "../rectangle";
+import {CombinableRange, HasRangesXY} from "./types";
 import {toXYRange} from "./convert";
+import {IRangeMethods} from "../../lib/range";
+import {Range, XY, Sized, Coordinates, HasCoordinates} from "../coreTypes";
 
 /**
  * XY range is allowed to be open in any direction
  * all Rectangles are XYRanges, but not all XYRanges are Rectangles
  * it is only a rectangle if it is closed on all four sides
  */
-export default class XYRange implements HasCoordinates, HasRangesXY, XYRangeMethods, ISized, CombinableRange<XY>, Range<XY> {
+export default class XYRange implements HasCoordinates, HasRangesXY, IRangeMethods<XY>, Sized, CombinableRange<XY>, Range<XY> {
     /**
      * not sure if there is much purpose in storing the x1s,
      * but it allows for an object to be constructed from another object
@@ -21,7 +21,7 @@ export default class XYRange implements HasCoordinates, HasRangesXY, XYRangeMeth
     /**
      * can construct from a Rectangle class or an object of props
      */
-    constructor(coordinates: Partial<ICoordinates>) {
+    constructor(coordinates: Partial<Coordinates>) {
         const {x1, x2, y1, y2} = coordinates;
 
         this.rangeX = new NumericRange(x1, x2);
@@ -44,16 +44,17 @@ export default class XYRange implements HasCoordinates, HasRangesXY, XYRangeMeth
         return this.rangeY.constrain(value);
     }
 
-    contains = (point: IPoint): boolean => {
-        // returns true if the point is inside the rectangle OR on the border
+    contains(point: XY): boolean {
         return this.containsX(point.x) && this.containsY(point.y);
     };
 
     /**
      * returns an edited copy of the point rather than mutating it
+     * passes through any properties in addition to X and Y
      */
-    constrain = (point: IPoint): IPoint => {
+    constrain<T extends XY>(point: T): T {
         return {
+            ...point,
             x: this.constrainX(point.x),
             y: this.constrainY(point.y),
         };
@@ -67,14 +68,14 @@ export default class XYRange implements HasCoordinates, HasRangesXY, XYRangeMeth
     };
 
     get width(): number {
-        return this.rangeX.width;
+        return this.rangeX.length;
     }
 
     get height(): number {
-        return this.rangeY.width;
+        return this.rangeY.length;
     }
 
-    get coordinates(): ICoordinates {
+    get coordinates(): Coordinates {
         return {
             x1: this.rangeX.min,
             x2: this.rangeX.max,

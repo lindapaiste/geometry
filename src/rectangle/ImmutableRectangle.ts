@@ -1,27 +1,34 @@
-import RectanglePoint from "../rectanglePoints/RectanglePoint";
-import {ICoordinates, HasCoordinates, IRectangle, RectangleValues} from "./types";
+import RectanglePoint from "./points/RectanglePoint";
+import {RectangleValues} from "./types";
 import XYRange from "../range/XYRange";
-import {XYRangeMethods} from "../range";
 import {
+    CENTER,
     CenterPoint,
     CornerPoint,
-    IPoint,
+    CORNERS,
     IPointName,
     IRectanglePoint,
-    ISized,
+    isCenter,
+    isMidpoint,
+    isXName,
     MidPoint,
-    PointNameTuple, Side,
-    XName, YName
-} from "..";
-import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
-import {isCenter, isMidpoint, isXName} from "../rectanglePoints/booleans";
-import {midpointSide} from "../rectanglePoints/midpointsSides";
-import {CENTER, CORNERS, MIDPOINTS} from "../rectanglePoints/pointConstants";
+    MIDPOINTS,
+    midpointToSide,
+    oppositeName,
+    oppositePointName,
+    PointNameTuple,
+    Side,
+    XName,
+    YName
+} from "./points";
+import {coordsToRect, makeCompleteRectangle, rectToCoords, toCoordinates, toRectangleProps} from "./convert";
+import {HasCoordinates, Coordinates, XY, Rectangle, Sized} from "../coreTypes";
+import {HasRangesXY} from "../range";
 
 /**
  * has all of the same editing functions, but always returns a new object
  */
-export default class ImmutableRectangle implements IPoint, ISized, ICoordinates, HasCoordinates, IRectangle, XYRangeMethods, RectangleValues {
+export default class ImmutableRectangle implements XY, Sized, Coordinates, HasCoordinates, Rectangle, RectangleValues, HasRangesXY {
     public readonly range: XYRange;
 
     /**
@@ -39,7 +46,8 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
 
 // ----------------------------CREATION--------------------------//
 
-    constructor(props: Partial<IRectangle>) {
+    constructor(props: Partial<Rectangle>) {
+        const {x1, x2, y1, y2} = rectToCoords(makeCompleteRectangle(props));
         this.x1 = props.x || 0;
         this.y1 = props.y || 0;
         this.x2 = this.x1 + (props.width || 0);
@@ -52,23 +60,18 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
         return new ImmutableRectangle(this);
     }
 
-    static fromObject(object: IRectangle): ImmutableRectangle {
+    static fromObject(object: Rectangle): ImmutableRectangle {
         return new this(object);
     }
 
-    static fromCoordinates(object: ICoordinates): ImmutableRectangle {
-        return new this({
-            x: object.x1,
-            y: object.y1,
-            width: object.x2 - object.x1,
-            height: object.y2 - object.y1,
-        });
+    static fromCoordinates(object: Coordinates): ImmutableRectangle {
+        return new this(coordsToRect(object));
     }
 
     /**
      * helper creates a copy with some properties changed from the IRectangle interface, eg. x, y, width, or height.
      */
-    private _alteredProps = (props: Partial<IRectangle>): ImmutableRectangle => {
+    private _alteredProps = (props: Partial<Rectangle>): ImmutableRectangle => {
         return new ImmutableRectangle({
             ...this.props,
             ...props,
@@ -78,7 +81,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
     /**
      * helper creates a copy with some coordinates changed, eg. x1, x2, y1, y2.
      */
-    private _alteredCoords = (coords: Partial<ICoordinates>): ImmutableRectangle => {
+    private _alteredCoords = (coords: Partial<Coordinates>): ImmutableRectangle => {
         return ImmutableRectangle.fromCoordinates({
             ...this.coordinates,
             ...coords,
@@ -126,13 +129,8 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
     /**
      * use this with spread operator, since get() properties aren't included in spread
      */
-    get props(): IRectangle {
-        return {
-            x: this.x,
-            y: this.y,
-            width: this.width,
-            height: this.height,
-        };
+    get props(): Rectangle {
+        return toRectangleProps(this);
     }
 
     get area(): number {
@@ -154,13 +152,8 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
         return MIDPOINTS.map(this.getPoint) as (RectanglePoint & MidPoint)[];
     }
 
-    get coordinates(): ICoordinates {
-        return {
-            x1: this.x1,
-            x2: this.x2,
-            y1: this.y1,
-            y2: this.y2,
-        };
+    get coordinates(): Coordinates {
+        return toCoordinates(this);
     }
 
 // ----------------------------MOVING--------------------------//
@@ -168,7 +161,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
     /**
      * Root shift method an apply a change in both the x and y directions
      */
-    shift = ({x = 0, y = 0}: Partial<IPoint>): ImmutableRectangle => {
+    shift = ({x = 0, y = 0}: Partial<XY>): ImmutableRectangle => {
         return this._alteredProps({
             x: this.x + x,
             y: this.y + y
@@ -213,7 +206,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
     /**
      * Shift the center point of a rectangle. A specific instance of shiftToPoint.
      */
-    setCenter = (point: IPoint): ImmutableRectangle => {
+    setCenter = (point: XY): ImmutableRectangle => {
         return this.shiftToPoint({...point, ...CENTER});
     };
 
@@ -282,7 +275,7 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
         const fixedPoint = oppositePointName(point);
 
         if (isMidpoint(point)) {
-            const side = midpointSide(point);
+            const side = midpointToSide(point);
             const value = isXName(side) ? point.x : point.y;
             return this.scaleToSide(value, side, fixedPoint);
         } else {
@@ -299,6 +292,15 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
     };
 
 // ----------------------------STRETCHING--------------------------//
+
+    /**
+     * Change the width, height, or both, but keep a specific fixedPoint at the same position
+     */
+    stretch = (size: Partial<Sized>, fixedPoint: IPointName = CENTER): ImmutableRectangle => {
+        const {width = this.width, height = this.height} = size;
+        return this._alteredProps({width, height})
+            .shiftToPoint(this.getPoint(fixedPoint));
+    }
 
     /**
      * Change the width without making any changes to y or height. The placement of the rectangle on the x-axis is
@@ -430,55 +432,25 @@ export default class ImmutableRectangle implements IPoint, ISized, ICoordinates,
 // -------------------------CONTAINED VALUES--------------------------//
 
     /**
-     * @param {number} value
-     * @returns {boolean}
+     * Force a point to be contained in the rectangle
      */
-    containsX = (value: number): boolean => {
-        return this.rangeX.contains(value);
-    }
-
-    /**
-     * @param {number} value
-     * @returns {boolean}
-     */
-    containsY = (value: number): boolean => {
-        return this.rangeY.contains(value);
-    }
-
-    /**
-     * @param {number} value
-     * @returns {number}
-     */
-    constrainX = (value: number): number => {
-        return this.rangeX.constrain(value);
-    }
-
-    /**
-     * @param {number} value
-     * @returns {number}
-     */
-    constrainY = (value: number): number => {
-        return this.rangeY.constrain(value);
-    }
-
-    /**
-     * @param {IPoint} point
-     * @returns {boolean}
-     */
-    contains = (point: IPoint): boolean => {
-        // returns true if the point is inside the rectangle OR on the border
-        return this.containsX(point.x) && this.containsY(point.y);
+    constrain = <T extends XY>(point: T): T => {
+        return this.range.constrain(point);
     };
 
     /**
-     * returns an edited copy of the point rather than mutating it
-     * @param {IPoint} point
-     * @returns {IPoint}
+     * Returns true if the point is inside the rectangle OR on the border
      */
-    constrain = (point: IPoint): IPoint => {
-        return {
-            x: this.constrainX(point.x),
-            y: this.constrainY(point.y),
-        };
+    contains = (point: XY): boolean => {
+        return this.range.contains(point);
     };
+
+    isOnBorder = (point: XY): boolean => {
+        // what about a margin?
+        if (!this.contains(point)) {
+            return false;
+        }
+        return point.x === this.x1 || point.x === this.x2 || point.y === this.y1 || point.y === this.y2;
+    }
+
 }

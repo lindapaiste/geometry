@@ -1,26 +1,24 @@
-import {RangeMethods} from "../range";
-import ImmutableRectangle from "../rectangle/ImmutableRectangle";
-import {isXName} from "../rectanglePoints/booleans";
-import {midpointSide} from "../rectanglePoints/midpointsSides";
-import {IPoint, ISized} from "../index";
-import {fits} from "../sized/sized-util";
-import {oppositePointName} from "../rectanglePoints/opposites";
+import {RangeMethods} from "../../range";
+import ImmutableRectangle from "../ImmutableRectangle";
+import {Point, Sized} from "../../index";
+import {fits} from "../../sized/compare";
+import {isXName, midpointToSide, oppositePointName} from "../points";
 
 /**
  * an XY Range which can contain or constrain Rectangle objects rather than Points
  *
  * contains is simple true or false and properties of the rectangle don't matter
  *
- * in order to force containment of a rectangle, need to know the methods available for containment, eg. shift, scale, stretch
- * for scale and stretch, may also want to know the fixed point basis
+ * in order to force containment of a rectangle, need to know the methods available for containment, eg. shift, scale,
+ * stretch for scale and stretch, may also want to know the fixed point basis
  *
  * copy-and-pasting from BoundedRectangle for now
  * not sure how these will relate in the future
  */
 export default class RectangleBoundary implements RangeMethods<ImmutableRectangle> {
-    public readonly boundary: RangeMethods<IPoint> & ISized;
+    public readonly boundary: RangeMethods<Point> & Sized;
 
-    constructor(boundary: RangeMethods<IPoint> & ISized) {
+    constructor(boundary: RangeMethods<Point> & Sized) {
         this.boundary = boundary;
     }
 
@@ -45,7 +43,7 @@ export default class RectangleBoundary implements RangeMethods<ImmutableRectangl
     /**
      * does this rectangle need to be stretched or scaled back to fit, or is just shifting enough?
      */
-    isTooLarge(value: ISized): boolean {
+    isTooLarge(value: Sized): boolean {
         return fits(this.boundary)(value);
     }
 
@@ -87,7 +85,7 @@ export default class RectangleBoundary implements RangeMethods<ImmutableRectangl
                  * if a midpoint wound up outside, pull back in the side that the midpoint is on
                  */
                 const constrained = this.boundary.constrain(point);
-                const side = midpointSide(point);
+                const side = midpointToSide(point);
                 const value = isXName(side) ? constrained.x : constrained.y;
                 return r.scaleToSide(value, side, oppositePointName(point));
             }

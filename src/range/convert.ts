@@ -1,7 +1,5 @@
-import {Range} from "./types";
-import {XY} from "../points";
 import {XYRange} from "./index";
-import {ICoordinates} from "../rectangle";
+import {Range, Coordinates, XY} from "../coreTypes";
 
 /**
  * helper method allows accepting partially defined ranges as props by replacing undefined with infinite
@@ -38,7 +36,7 @@ export const toXYRange = (range: Range<XY>): XYRange => {
     }
 }
 
-export const rangeXYtoCoords = (range: Range<XY>): ICoordinates => {
+export const rangeXYtoCoords = (range: Range<XY>): Coordinates => {
     const {min, max} = range;
     // could double check min/max
     return {

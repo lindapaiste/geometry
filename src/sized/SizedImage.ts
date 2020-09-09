@@ -1,12 +1,12 @@
 import ScaledVersionCreator from "../scaling/ScaledVersion";
-import { ISized } from "./types";
+import {Sized} from "../coreTypes";
 
 /**
  * SizedImage was previously a class extending ScalableObject
  * refactor into a plain object interface
  */
 
-export interface ISizedImage extends ISized {
+export interface ISizedImage extends Sized {
   width: number;
   height: number;
   source_url: string;

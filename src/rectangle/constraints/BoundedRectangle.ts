@@ -1,10 +1,7 @@
-import ImmutableRectangle from "../rectangle/ImmutableRectangle";
-import {XYRangeMethods} from "../range";
-import {IPoint, IPointName, IRectanglePoint, XName, YName} from "..";
-import {isXName} from "../rectanglePoints/booleans";
-import {midpointSide} from "../rectanglePoints/midpointsSides";
-import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
-
+import ImmutableRectangle from "../ImmutableRectangle";
+import {XYRange} from "../../range";
+import {Point, IPointName, IRectanglePoint, XName, YName} from "../../index";
+import {isXName, oppositePointName, midpointToSide} from "../points";
 /**
  * uses the internal rectangle's functions to execute the move,
  * but first restricts based on boundary
@@ -15,9 +12,9 @@ import {oppositeName, oppositePointName} from "../rectanglePoints/opposites";
 
 export default class BoundedRectangle {
     private readonly rectangle: ImmutableRectangle;
-    private readonly boundary: XYRangeMethods;
+    private readonly boundary: XYRange;
 
-    constructor(rectangle: ImmutableRectangle, boundary: XYRangeMethods) {
+    constructor(rectangle: ImmutableRectangle, boundary: XYRange) {
         this.rectangle = rectangle;
         this.boundary = boundary;
     }
@@ -57,7 +54,7 @@ export default class BoundedRectangle {
         return this.shiftBack(this.rectangle.shiftY(change));
     };
 
-    shift = (change: Partial<IPoint>): ImmutableRectangle => {
+    shift = (change: Partial<Point>): ImmutableRectangle => {
         return this.shiftBack(this.rectangle.shift(change));
     };
 
@@ -88,7 +85,7 @@ export default class BoundedRectangle {
                  * if a midpoint wound up outside, pull back in the side that the midpoint is on
                  */
                 const constrained = this.boundary.constrain(point);
-                const side = midpointSide(point);
+                const side = midpointToSide(point);
                 const value = isXName(side) ? constrained.x : constrained.y;
                 return r.scaleToSide(value, side, oppositePointName(point));
             }

@@ -1,6 +1,7 @@
 import {LineDef, LineFormula, LineFromAngle, LineFromPoints} from "./types";
 import {degreesToRadians} from "../angles";
-import {EitherPoint, pointToXY} from "../points";
+import {pointToXY} from "../points";
+import {EitherPoint} from "../coreTypes";
 
 /**
  * find which definition we are dealing with

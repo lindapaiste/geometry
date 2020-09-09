@@ -1,7 +1,8 @@
 import {Limits} from "./types";
-import {RangeMethods} from "..";
+import {Range} from "../coreTypes";
+import {toNumericRange} from "../range";
 
-export default class ScaleCalculator<Scalable extends string,
+export default class ScaleCalculator<Scalable extends keyof any,
     OT extends Record<Scalable, number>> {
     private readonly scalableProperties: Scalable[];
     private readonly object: OT;
@@ -34,10 +35,7 @@ export default class ScaleCalculator<Scalable extends string,
             */
     }
 
-    calcScalePropertyToValue(
-        basisProperty: Scalable,
-        basisValue: number
-    ): number {
+    calcScalePropertyToValue(basisProperty: Scalable, basisValue: number): number {
         const currentValue = this._currentValue(basisProperty);
         return basisValue / currentValue;
     }
@@ -45,11 +43,7 @@ export default class ScaleCalculator<Scalable extends string,
     /**
      * for scaling width based on height, etc.
      */
-    getScaledProperty(
-        propertyName: Scalable,
-        basisProperty: Scalable,
-        basisValue: number
-    ): number {
+    getScaledProperty(propertyName: Scalable, basisProperty: Scalable, basisValue: number): number {
         const scale = this.calcScalePropertyToValue(basisProperty, basisValue);
         return this._getScaledValue(propertyName, scale);
     }
@@ -58,15 +52,13 @@ export default class ScaleCalculator<Scalable extends string,
      * calculate a scale which forces the given property into the given range
      * if the value is already in range, return 1 so as not to make any changes
      */
-    calcScalePropertyToRange(
-        propertyName: Scalable,
-        range: RangeMethods
-    ): number {
+    calcScalePropertyToRange(propertyName: Scalable, range: Range): number {
         const currentValue = this._currentValue(propertyName);
+        const rangeObj = toNumericRange(range);
         // console.log(`value ${propertyName} must be in range ${range.min} to ${range.max} and is currently
         // ${currentValue}`);
-        if (!range.contains(currentValue)) {
-            const value = range.constrain(currentValue);
+        if (!rangeObj.contains(currentValue)) {
+            const value = rangeObj.constrain(currentValue);
             return this.calcScalePropertyToValue(propertyName, value);
         } else {
             return 1;

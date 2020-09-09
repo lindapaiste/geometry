@@ -7,7 +7,7 @@ test("test defined range (0,100)", () => {
     expect(range.min).toBe(0);
     expect(range.max).toBe(100);
     expect(range.isFinite()).toBe(true);
-    expect(range.width).toBe(100);
+    expect(range.length).toBe(100);
 
     // should contain 50
     expect(range.contains(50)).toBe(true);
@@ -37,7 +37,7 @@ test("test range (_,_) which is open on both ends", () => {
     const range = new NumericRange();
 
     expect(range.isFinite()).toBe(false);
-    expect(range.width).toBe(Infinity);
+    expect(range.length).toBe(Infinity);
 
     // should contain any number
     expect(range.contains(-1000)).toBe(true);
@@ -57,7 +57,7 @@ test("test range (10,_) which is open on one end", () => {
     expect(range.isFinite()).toBe(false);
     expect(range.min).toBe(10);
     expect(range.max).toBe(Infinity);
-    expect(range.width).toBe(Infinity);
+    expect(range.length).toBe(Infinity);
 
     expect(range.contains(0)).toBe(false);
     expect(range.constrain(0)).toBe(10);
@@ -77,7 +77,7 @@ test("test range (_, 10) which is open on one end", () => {
     expect(range.isFinite()).toBe(false);
     expect(range.min).toBe(-Infinity);
     expect(range.max).toBe(10);
-    expect(range.width).toBe(Infinity);
+    expect(range.length).toBe(Infinity);
 
     expect(range.contains(0)).toBe(true );
     expect(range.constrain(0)).toBe(0);

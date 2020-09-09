@@ -1,8 +1,9 @@
-import {IRectangle, RectangleValues, toRectangleClass} from "../rectangle";
-import ImmutableRectangle from "../rectangle/ImmutableRectangle";
+import {RectangleValues, toRectangleClass} from "../index";
+import ImmutableRectangle from "../ImmutableRectangle";
 import {PROPERTIES} from "./compare";
-import {isSameAspectRatio, isSameNumber} from "../sized/sized-util";
-import {ALL_POINTS} from "../rectanglePoints/pointConstants";
+import {isSameAspectRatio, isSameNumber} from "../../sized/compare";
+import {ALL_POINTS} from "../points";
+import {Rectangle} from "../../coreTypes";
 
 /**
  * the reason this is a class is to reduce recalculation of the same values, since multiple booleans depend on the same
@@ -15,7 +16,7 @@ export default class RectangleCompare {
 
     public readonly sharedKeys: (keyof RectangleValues)[]
 
-    constructor(a: IRectangle, b: IRectangle, margin: number) {
+    constructor(a: Rectangle, b: Rectangle, margin: number) {
         this.a = toRectangleClass(a);
         this.b = toRectangleClass(b);
 

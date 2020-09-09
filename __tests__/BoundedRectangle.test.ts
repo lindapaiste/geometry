@@ -1,5 +1,5 @@
 import ImmutableRectangle from "../src/rectangle/ImmutableRectangle";
-import BoundedRectangle from "../src/rectangleConstraints/BoundedRectangle";
+import BoundedRectangle from "../src/rectangle/constraints/BoundedRectangle";
 import {toRectangleProps} from "../src/rectangle/convert";
 
 const original = new ImmutableRectangle({
@@ -14,7 +14,7 @@ const boundary = new ImmutableRectangle({
     y: 0,
     width: 400,
     height: 400,
-})
+}).range;
 
 const bounded = new BoundedRectangle(original, boundary);
 

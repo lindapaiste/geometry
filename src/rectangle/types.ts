@@ -1,22 +1,6 @@
-import {IPoint, ISized, XY} from "..";
+import {Coordinates, Sized, XY} from "../coreTypes";
+import {IPointName, IRectanglePoint, RectanglePoint} from "./points";
 
-export interface IRectangle extends ISized, IPoint {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-export interface ICoordinates {
-    x1: number;
-    x2: number;
-    y1: number;
-    y2: number;
-}
-
-export interface HasCoordinates {
-    coordinates: ICoordinates;
-}
 
 // ------------------------- PROPERTIES ----------------------- //
 
@@ -39,7 +23,7 @@ export interface XYValues extends XValues, YValues {
  * for the purposes of containment, define properties as width, height, all x names, and all y names
  * does not require x and y as these are aliases for x1 and y1
  */
-export interface RectangleValues extends ICoordinates, ISized, XYValues {
+export interface RectangleValues extends Coordinates, Sized, XYValues {
 }
 
 
@@ -64,20 +48,20 @@ export interface Movable {
  * any object which has a width and height can be scaled
  */
 export interface ScalableSize {
-    scale(float: number): ISized;
+    scale(float: number): Sized;
 
-    scaleToWidth(width: number): ISized;
+    scaleToWidth(width: number): Sized;
 
-    scaleToHeight(height: number): ISized;
+    scaleToHeight(height: number): Sized;
 }
 
 /**
  * any object which has a width and height can be stretched
  */
 export interface StretchableSize {
-    stretchToWidth(width: number): ISized;
+    stretchToWidth(width: number): Sized;
 
-    stretchToHeight(width: number): ISized;
+    stretchToHeight(width: number): Sized;
 
-    stretchToRatio(ratio: number): ISized;
+    stretchToRatio(ratio: number): Sized;
 }

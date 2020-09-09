@@ -1,7 +1,7 @@
-import {IRectangle} from "..";
+import {Rectangle} from "..";
 import {LineDef} from "./types";
 import Segment from "./Segment";
-import {toRectangleClass} from "../rectangle/convert";
+import {toRectangleClass} from "../rectangle";
 import Line from "./Line";
 
 /**
@@ -16,7 +16,7 @@ import Line from "./Line";
  * want to cutoff an infinite line into a segment that doesn't go outside of the rectangle
  * if it's a single point, can still return as a Segment from the point to itself
  */
-export const lineRectangleIntersection = (rect: IRectangle, line: LineDef): Segment | null => {
+export const lineRectangleIntersection = (rect: Rectangle, line: LineDef): Segment | null => {
     const rObj = toRectangleClass(rect);
     // const rSides = rectangleSideSegments(rect);
     const lObj = new Line(line);
@@ -41,7 +41,7 @@ export const lineRectangleIntersection = (rect: IRectangle, line: LineDef): Segm
     }
 }
 
-export const rectangleSideSegments = (rect: IRectangle): Segment[] => {
+export const rectangleSideSegments = (rect: Rectangle): Segment[] => {
     const {x1, x2, y1, y2} = toRectangleClass(rect).coordinates;
     return [
         new Segment([x1, y1], [x2, y1]), // top

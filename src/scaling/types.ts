@@ -1,4 +1,4 @@
-import {RangeMethods} from "..";
+import {Range} from "../coreTypes";
 
 /**
  * define a scalable object as one with a scale() method
@@ -26,7 +26,7 @@ export interface IScalableObject<
 
   scalePropertyToValue(propertyName: Scalable, value: number): OT;
 
-  scalePropertyToRange(propertyName: Scalable, range: RangeMethods<number>): OT;
+  scalePropertyToRange(propertyName: Scalable, range: Range): OT;
 
   scaleToFit(propertyMaximums: Limits<Scalable>): OT;
 
@@ -37,6 +37,6 @@ export interface IScalableObject<
  * the limits used for scaling an object are a subset of the scalable properties,
  * where not all properties have to be defined
  */
-export type Limits<Scalable extends string> = Partial<
+export type Limits<Scalable extends keyof any> = Partial<
   Record<Scalable, number | undefined>
 >;

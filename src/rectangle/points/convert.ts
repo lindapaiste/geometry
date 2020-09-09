@@ -1,5 +1,6 @@
-import {IRectanglePoint} from "./types";
+import {IRectanglePoint, MidPoint, Side} from "./types";
 import RectanglePoint from "./RectanglePoint";
+import {isCenterX, isXName} from "./booleans";
 
 /**
  * Can switch between an IRectanglePoint object interface and the classed object
@@ -28,3 +29,25 @@ export const toRPointClass = (obj: IRectanglePoint): RectanglePoint => {
         return new RectanglePoint(obj);
     }
 }
+
+/**
+ * get the point name which is the midpoint of the given side
+ */
+export const sideToMidpoint = (side: Side): MidPoint => {
+    return isXName(side)
+        ? {
+            xName: side,
+            yName: "ymid",
+        }
+        : {
+            xName: "xmid",
+            yName: side,
+        };
+};
+
+/**
+ * get the side which a midpoint is on
+ */
+export const midpointToSide = (point: MidPoint): Side => {
+    return isCenterX(point) ? point.yName : point.xName;
+};

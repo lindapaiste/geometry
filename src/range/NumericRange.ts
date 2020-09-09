@@ -1,12 +1,12 @@
-import {CombinableRange, Range, RangeMethods} from "./types";
-import {PropWidth} from "../sized";
+import {CombinableRange, RangeMethods} from "./types";
 import {fixPartialRange, numbersToRange} from "./convert";
+import {PropLength, Range} from "../coreTypes";
 
 /**
  * a numeric range can be open-ended on one or both ends, but the min and max will always be a number because it will
  * be positive or negative Infinity instead of undefined
  */
-export default class NumericRange implements Range, RangeMethods, CombinableRange, PropWidth {
+export default class NumericRange implements Range, RangeMethods, CombinableRange, PropLength {
     public readonly max: number;
     public readonly min: number;
 
@@ -49,7 +49,7 @@ export default class NumericRange implements Range, RangeMethods, CombinableRang
      * true if the range max is a finite number
      */
     hasMax(): this is this & { max: number } {
-        return isFinite(this.max );
+        return isFinite(this.max);
     }
 
     /**
@@ -60,9 +60,9 @@ export default class NumericRange implements Range, RangeMethods, CombinableRang
     }
 
     /**
-     * width is the distance between the max and min if both are defined, or infinity otherwise
+     * length is the distance between the max and min if both are defined, or infinity otherwise
      */
-    get width(): number {
+    get length(): number {
         return this.max - this.min;
     }
 
@@ -125,3 +125,6 @@ export default class NumericRange implements Range, RangeMethods, CombinableRang
     }
 }
 
+export const toNumericRange = (obj: Partial<Range>): NumericRange => {
+    return obj instanceof NumericRange ? obj : NumericRange.fromRange(obj);
+}

@@ -1,7 +1,7 @@
-import {IPoint, IRectangle, setX, setY, shiftPointBy, shiftPointX, shiftPointY} from "../src";
+import {Point, Rectangle, setX, setY, shiftPointBy, shiftPointX, shiftPointY} from "../src";
 
 test("move points", () => {
-    const point: IPoint = {x: 5, y: 10};
+    const point: Point = {x: 5, y: 10};
 
     expect( shiftPointX(point, 20)).toEqual({x: 25, y: 10});
     expect( shiftPointY(point, 20)).toEqual({x: 5, y: 30});
@@ -10,8 +10,8 @@ test("move points", () => {
 })
 
 test("set x y values", () => {
-    const point: IPoint = {x: 5, y: 10};
-    const rect: IRectangle = {x: 5, y: 10, width: 10, height: 20};
+    const point: Point = {x: 5, y: 10};
+    const rect: Rectangle = {x: 5, y: 10, width: 10, height: 20};
 
     expect( setX(point, 25)).toEqual({x: 25, y: 10});
     expect( setY(point, 25)).toEqual({x: 5, y: 25});

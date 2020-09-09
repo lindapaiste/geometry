@@ -1,17 +1,16 @@
-import {IPoint, NumericRange} from "..";
+import {Point, NumericRange, CanContain, XY, shiftPointBy} from "..";
 import Line from "./Line";
-import {pointToXY} from "../points/convert";
-import {EitherPoint} from "../points/types";
-import {ICoordinates} from "..";
+import {pointToXY} from "../points";
+import {Coordinates, EitherPoint} from "../coreTypes";
 
 /**
  * whereas a Line is infinite, a segment only exists between two defined points
  */
-export default class Segment implements ICoordinates {
+export default class Segment implements Coordinates, CanContain<Point> {
 
-    public readonly start: IPoint;
+    public readonly start: Point;
 
-    public readonly end: IPoint;
+    public readonly end: Point;
 
     private line: Line;
 
@@ -32,7 +31,7 @@ export default class Segment implements ICoordinates {
         return NumericRange.fromNumbers(this.start.y, this.end.y).contains(value);
     }
 
-    contains = (point: IPoint, margin?: number): boolean => {
+    contains = (point: Point, margin?: number): boolean => {
         /**
          * need to know that the point is on the line and that it's not outside of the endpoints
          * checking contains for both x and y would be redundant because the two are linked
@@ -68,4 +67,13 @@ export default class Segment implements ICoordinates {
         return this.end.y;
     }
 
+    /**
+     * Shift a segment by applying the shift to both endpoints
+     */
+    public shift = (value: XY): Segment => {
+        return new Segment(
+            shiftPointBy(this.start, value),
+            shiftPointBy(this.end, value),
+        )
+    }
 }

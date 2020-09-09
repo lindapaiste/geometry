@@ -1,6 +1,8 @@
 import {LineDef, LineFormula} from "./types";
 import {lineToFormula} from "./convert";
-import {IPoint, IRectangle} from "..";
+import {Point, XY} from "../coreTypes";
+import {slopeToDegrees} from "../angles";
+import {shiftPointBy} from "../points";
 
 /**
  * this class is for accessing properties of the line
@@ -42,14 +44,14 @@ export default class Line implements LineFormula {
     /**
      * get the y value for a given x by using formula y = mx + b
      */
-    public pointForX = (x: number): IPoint => {
+    public pointForX = (x: number): Point => {
         return {x, y: this.yForX(x)};
     }
 
     /**
      * get the x value for a given y by using formula x = (y - b)/m
      */
-    public pointForY = (y: number): IPoint => {
+    public pointForY = (y: number): Point => {
         return {x: this.xForY(y), y};
     }
 
@@ -58,7 +60,7 @@ export default class Line implements LineFormula {
      * or return null if they do not intersect
      * or a line if the two lines are identical, as the intersection is infinite
      */
-    public intersection = (line: LineDef | Line ): IPoint | null | Line => {
+    public intersection = (line: LineDef | Line ): Point | null | Line => {
         const formula = lineToFormula(line);
         if ( this.slope === formula.slope) {
             return ( this.yIntercept === formula.yIntercept) ? this : null;
@@ -71,7 +73,21 @@ export default class Line implements LineFormula {
     /**
      * compare computed y for x with expected y while allowing for slight rounding error
      */
-    contains = (point: IPoint, margin: number = 0.001): boolean => {
+    public contains = (point: Point, margin: number = 0.001): boolean => {
         return Math.abs(this.yForX(point.x) - point.y ) < margin;
     };
+
+    get angle(): number {
+        return slopeToDegrees(this.slope);
+    }
+
+    /**
+     * shift will keep the same slope, but move the y-intercept
+     */
+    public shift = (value: XY): Line => {
+        // can create new line from the current angle and one point, or from two points
+        const a = shiftPointBy(this.pointForX(0), value);
+        const b = shiftPointBy(this.pointForX(1), value);
+        return new Line([a,b]);
+    }
 }

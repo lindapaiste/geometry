@@ -1,27 +1,21 @@
-import {EitherPoint, IPoint, PointTuple} from "./types";
+import {EitherPoint, Point, PointTuple} from "../coreTypes";
 
-export const isTuple = (point: EitherPoint): point is PointTuple => {
+/**
+ * typecheck can be lenient when there are only two possible types
+ */
+const isTuple = (point: EitherPoint): point is PointTuple => {
     return Array.isArray(point);
 }
 
-export const isXY = (point: EitherPoint): point is IPoint => {
-    return "x" in point && "y" in point;
-}
-
-
-export const pointToXY = (point: EitherPoint): IPoint => {
-    if ( isXY(point)) {
-        return point;
-    } else {
-        const [x,y] = point;
-        return {x,y};
-    }
+export const pointToXY = (point: EitherPoint): Point => {
+    if (isTuple(point)) {
+        const [x, y] = point;
+        return {x, y};
+    } else return point;
 }
 
 export const pointToTuple = (point: EitherPoint): PointTuple => {
-    if ( isXY(point) ) {
+    if (!isTuple(point)) {
         return [point.x, point.y];
-    } else {
-        return point;
-    }
+    } else return point;
 }

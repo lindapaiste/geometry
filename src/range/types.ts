@@ -1,13 +1,4 @@
-import {IPoint} from "..";
-
-/**
- * a range object has a min and a max
- * they are both defined here, but can use Partial<IRange> for open-ended
- */
-export interface Range<T = number> {
-    min: T;
-    max: T;
-}
+import {Range, Point} from "../coreTypes";
 
 /**
  * define an interface which has the methods of the class
@@ -39,7 +30,7 @@ export interface HasRangesXY {
  * a rectangular range can contain and constrain a point.
  * it can also contain and constrain just an x or a y value
  */
-export interface XYRangeMethods extends RangeMethods<IPoint> {
+export interface XYRangeMethods extends RangeMethods<Point> {
     containsX(value: number): boolean;
 
     containsY(value: number): boolean;
@@ -48,3 +39,4 @@ export interface XYRangeMethods extends RangeMethods<IPoint> {
 
     constrainY(value: number): number;
 }
+
