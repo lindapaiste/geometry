@@ -1,7 +1,5 @@
 import {RectangleValues} from "./types";
-import {Point} from "../points";
-import {Sized} from "../sized";
-import {Coordinates, Rectangle} from "../coreTypes";
+import {Coordinates, Rectangle, Sized, XY} from "../coreTypes";
 
 /**
  * alternative version of rectangle class includes setters for all basic properties (x/y, x1s, width/height)
@@ -10,8 +8,7 @@ import {Coordinates, Rectangle} from "../coreTypes";
  * does not have all of the methods of the ImmutableRectangle class, but it can pass itself to that constructor to
  * access them
  */
-export default class MutableRectangle
-    implements Point, Sized, Coordinates, Rectangle, RectangleValues {
+export default class MutableRectangle implements XY, Sized, Coordinates, Rectangle, RectangleValues {
     public x1: number;
     public x2: number;
     public y1: number;
@@ -79,7 +76,7 @@ export default class MutableRectangle
      * the point names don't matter, so for example a corner could be set to center
      * will move the rectangle and preserve width/height
      */
-    set center(point: Point) {
+    set center(point: XY) {
         this.xmid = point.x;
         this.ymid = point.y;
     }

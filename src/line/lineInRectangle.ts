@@ -1,4 +1,4 @@
-import {Rectangle} from "..";
+import {Rectangle} from "../coreTypes";
 import {LineDef} from "./types";
 import Segment from "./Segment";
 import {toRectangleClass} from "../rectangle";

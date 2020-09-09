@@ -2,7 +2,7 @@
  * can minimize the potential for circular dependencies by defining shared types outside of any folder
  */
 
-//-----------------------------------TYPE CHECK FACTORIES----------------------------------//
+// -----------------------------------TYPE CHECK FACTORIES---------------------------------- //
 
 export const hasNumberProperty = <K extends string>(key: K) => <T>(obj: T & Partial<Record<K, any>>): obj is T & Record<K, number> => {
     return typeof obj[key] === "number";
@@ -12,17 +12,16 @@ export const hasMultipleNumberProperties = <K extends string>(keys: K[]) => <T>(
     return keys.every(key => typeof obj[key] === "number");
 }
 
-//-----------------------------------POINT / POSITION----------------------------------//
+// -----------------------------------POINT / POSITION---------------------------------- //
 
 export interface Point {
     x: number;
     y: number;
 }
 
-export interface XY extends Point {
-}
+export type XY = Point;
 
-export interface IPoint extends Point {} //back compat
+export type IPoint = Point; // back compat
 
 export const isXY = (point: any): point is XY => {
     return typeof point === "object" &&
@@ -34,7 +33,7 @@ export type PointTuple = [number, number];
 
 export type EitherPoint = Point | PointTuple;
 
-//--------------------------------------RANGE-------------------------------------//
+// --------------------------------------RANGE------------------------------------- //
 
 /**
  * a range is an object with a min and a max
@@ -45,9 +44,7 @@ export interface Range<T = number> {
     max: T;
 }
 
-export interface MinMax<T = number> extends Range<T> {
-
-}
+export type  MinMax<T = number> = Range<T>;
 
 export interface CanContain<T = number> {
     contains(value: T): boolean;
@@ -57,7 +54,7 @@ export interface CanConstrain<T = number> {
     constrain(value: T): T;
 }
 
-//--------------------------------------SIZED-------------------------------------//
+// --------------------------------------SIZED------------------------------------- //
 
 /**
  * An object is sized if it has a width and a height.
@@ -68,14 +65,14 @@ export interface Sized {
     width: number;
     height: number;
 }
-export interface ISized extends Sized {} // back compat
+export type ISized = Sized; // back compat
 
 export const extractSize = <T extends Partial<Sized>>(obj: T): Pick<T, keyof Sized> => ({
     width: obj.width,
     height: obj.height,
 });
 
-//------------------------------------RECTANGLE-----------------------------------//
+// ------------------------------------RECTANGLE----------------------------------- //
 
 export interface Rectangle extends Sized, Point {
     x: number;
@@ -84,7 +81,7 @@ export interface Rectangle extends Sized, Point {
     height: number;
 }
 
-export interface IRectangle extends Rectangle{} // back compat
+export type IRectangle = Rectangle; // back compat
 
 export interface HasRectangle {
     rectangle: Rectangle;
@@ -94,7 +91,7 @@ export const rectangleKeys: (keyof Rectangle)[] = ["x", "y", "width", "height"];
 
 export const isCompleteRectangle = hasMultipleNumberProperties(rectangleKeys);
 
-//------------------------------------COORDINATES-----------------------------------//
+// ------------------------------------COORDINATES----------------------------------- //
 
 export interface Coordinates {
     x1: number;
@@ -103,7 +100,7 @@ export interface Coordinates {
     y2: number;
 }
 
-export interface ICoordinates extends Coordinates{} // back compat
+export type ICoordinates = Coordinates; // back compat
 
 export interface HasCoordinates {
     coordinates: Coordinates;
@@ -113,7 +110,7 @@ export const coordinatesKeys: (keyof Coordinates)[] = ["x1", "x2", "y1", "y2"];
 
 export const isCompleteCoordinates = hasMultipleNumberProperties(coordinatesKeys);
 
-//-----------------------------------STANDARD PROPS----------------------------------//
+// -----------------------------------STANDARD PROPS---------------------------------- //
 
 export interface PropLength {
     length: number;

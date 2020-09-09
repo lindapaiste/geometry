@@ -1,4 +1,3 @@
-import ImmutableRectangle from "./ImmutableRectangle";
 import {Coordinates, HasCoordinates, Range, Rectangle, Sized, XY} from "../coreTypes";
 import {HasRangesXY} from "../range";
 
@@ -17,18 +16,6 @@ export const toRectangleProps = <R extends Partial<Rectangle>>(obj: R): Pick<R, 
     width: obj.width,
     height: obj.height,
 });
-
-/**
- * this check isn't entirely necessary because it will work fine to always construct a new class,
- * but this function will return the existing class if it's already a class rather than constructing a new instance.
- */
-export const toRectangleClass = (obj: Partial<Rectangle>): ImmutableRectangle => {
-    if (obj instanceof ImmutableRectangle) {
-        return obj;
-    } else {
-        return new ImmutableRectangle(obj);
-    }
-}
 
 export const toCoordinates = (obj: Coordinates): Coordinates => ({
     x1: obj.x1,
@@ -146,7 +133,4 @@ export const rectToCoords = (rect: Rectangle): Coordinates => ({
  */
 export const isInvertedRect = ({width, height}: Sized) => {
     return width < 0 || height < 0;
-}
-export const isInvertedCoords = ({x1, x2, y1, y2}: Coordinates) => {
-    return x1 > x2 || y1 > y2;
 }

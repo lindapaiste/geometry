@@ -1,4 +1,4 @@
-import {PropHeight, PropWidth, Sized} from "..";
+import {PropHeight, PropWidth, Sized} from "../coreTypes";
 import ScaledVersionCreator, {ApplyScaledValues} from "./ScaledVersion";
 import ScaleCalculator from "./ScalableCalculator";
 
@@ -25,11 +25,8 @@ export const getScaleToFit = (object: Sized, target: Partial<Sized>): number => 
 /**
  * note: this can be done through the ScaleCalculator, but the calculation is so trivial that it is unnecessary
  *
- * return new ScaleCalculator(
- ["width", "height"],
- object
- ).calcScalePropertyToValue("height", height);
- * */
+ * return new ScaleCalculator(["width", "height"], object).calcScalePropertyToValue("height", height);
+ */
 
 export const getScaleForHeight = (object: PropHeight, height: number): number => {
     return height / object.height;

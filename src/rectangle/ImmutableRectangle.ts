@@ -22,7 +22,7 @@ import {
     YName
 } from "./points";
 import {coordsToRect, makeCompleteRectangle, rectToCoords, toCoordinates, toRectangleProps} from "./convert";
-import {HasCoordinates, Coordinates, XY, Rectangle, Sized} from "../coreTypes";
+import {Coordinates, HasCoordinates, Rectangle, Sized, XY} from "../coreTypes";
 import {HasRangesXY} from "../range";
 
 /**
@@ -453,4 +453,15 @@ export default class ImmutableRectangle implements XY, Sized, Coordinates, HasCo
         return point.x === this.x1 || point.x === this.x2 || point.y === this.y1 || point.y === this.y2;
     }
 
+}
+/**
+ * this check isn't entirely necessary because it will work fine to always construct a new class,
+ * but this function will return the existing class if it's already a class rather than constructing a new instance.
+ */
+export const toRectangleClass = (obj: Partial<Rectangle>): ImmutableRectangle => {
+    if (obj instanceof ImmutableRectangle) {
+        return obj;
+    } else {
+        return new ImmutableRectangle(obj);
+    }
 }

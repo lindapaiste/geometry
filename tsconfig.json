@@ -6,8 +6,11 @@
     "downlevelIteration": false,
     "declaration": true,
     "strict": true,
-    "outDir": "./lib",
-    "allowJs": true
+    "outDir": "lib",
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true
   },
   "lib": ["es2019", "dom", "esnext", "es2017.object", "dom.iterable"],
   "include": [

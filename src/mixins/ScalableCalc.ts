@@ -19,7 +19,7 @@ type Scalable<Keys extends keyof any> = CanScale<Calculatable<Keys>> & { scalabl
 
 type InferScalable<T> = T extends Constructor<Calculatable<infer S>> ? S : never;
 
-export function WithScalableCalc<Keys extends string, TBase extends Constructor<Calculatable<Keys>>>(Base: TBase) {
+export function MixinScalableCalc<Keys extends string, TBase extends Constructor<Calculatable<Keys>>>(Base: TBase) {
 
     return class WithScalableCalc extends Base {
 
@@ -61,10 +61,11 @@ export function WithScalableCalc<Keys extends string, TBase extends Constructor<
  * instead of specifying scalable properties, can use this mixin for objects which have width and height as their only
  * scalable properties
  */
+/*
 export function WithPropScalable<TBase extends Constructor<Sized>>(Base: TBase) {
     return class extends Base {
         get scalable(): Sized {
             return extractSize(this);
         }
     }
-}
+}*/

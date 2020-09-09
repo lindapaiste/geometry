@@ -6,10 +6,10 @@ import {getArea} from "./compute";
 /**
  * Applies a scale to an object, altering both the width and height while preserving the aspect ratio
  */
-export const scale = (obj: Sized, scale: number): Sized => {
+export const scale = (obj: Sized, float: number): Sized => {
     return {
-        width: obj.width * scale,
-        height: obj.height * scale
+        width: obj.width * float,
+        height: obj.height * float
     }
 };
 

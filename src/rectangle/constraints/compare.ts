@@ -1,8 +1,9 @@
 import {RectangleValues, toRectangleClass} from "../index";
 import {ALL_POINTS, IRectanglePoint, XNAMES, YNAMES} from "../points";
-import {isSameAspectRatio, isSameSize, isSameValue} from "../../sized/compare";
+import {isSameAspectRatio, isSameSize} from "../../sized/compare";
 import {isSameXY} from "../../points";
 import {Rectangle} from "../../coreTypes";
+import {isSameValue} from "../../isSameValue";
 
 export const PROPERTIES: (keyof RectangleValues)[] = [...XNAMES, ...YNAMES, "width", "height"];
 
@@ -65,7 +66,7 @@ export const isScaled = (a: Rectangle, b: Rectangle, margin?: number) => {
  * position is not examined
  */
 export const isStretched = (a: Rectangle, b: Rectangle, margin?: number) => {
-
+    return !isSameAspectRatio(a, b) && !isSameSize(a, b, margin);
 }
 
 export const pointToProperties = ({x, y, xName, yName}: IRectanglePoint): Partial<RectangleValues> => ({

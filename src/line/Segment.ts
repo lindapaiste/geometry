@@ -1,7 +1,7 @@
-import {Point, NumericRange, CanContain, XY, shiftPointBy} from "..";
+import {NumericRange} from "../range";
 import Line from "./Line";
-import {pointToXY} from "../points";
-import {Coordinates, EitherPoint} from "../coreTypes";
+import {pointToXY, shiftPointBy} from "../points";
+import {Coordinates, EitherPoint, Point, XY, CanContain} from "../coreTypes";
 
 /**
  * whereas a Line is infinite, a segment only exists between two defined points

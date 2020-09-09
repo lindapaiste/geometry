@@ -1,9 +1,10 @@
 import {RectangleValues, toRectangleClass} from "../index";
 import ImmutableRectangle from "../ImmutableRectangle";
 import {PROPERTIES} from "./compare";
-import {isSameAspectRatio, isSameNumber} from "../../sized/compare";
+import {isSameAspectRatio} from "../../sized/compare";
 import {ALL_POINTS} from "../points";
 import {Rectangle} from "../../coreTypes";
+import {isSameNumber} from "../../isSameValue";
 
 /**
  * the reason this is a class is to reduce recalculation of the same values, since multiple booleans depend on the same
@@ -30,7 +31,7 @@ export default class RectangleCompare {
     }
 
     isSameAspectRatio = (): boolean => {
-        //margin??
+        // margin??
         return isSameAspectRatio(this.a, this.b);
     }
 

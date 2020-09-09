@@ -1,16 +1,14 @@
 import NumericRange from "./NumericRange";
-import {isInvertedCoords} from "../rectangle";
-import {CombinableRange, HasRangesXY} from "./types";
-import {toXYRange} from "./convert";
-import {IRangeMethods} from "../../lib/range";
-import {Range, XY, Sized, Coordinates, HasCoordinates} from "../coreTypes";
+import {CombinableRange, HasRangesXY, RangeMethods} from "./types";
+import {Coordinates, HasCoordinates, Range, Sized, XY} from "../coreTypes";
+import {rangeXYtoCoords, isInvertedCoords} from "./convert";
 
 /**
  * XY range is allowed to be open in any direction
  * all Rectangles are XYRanges, but not all XYRanges are Rectangles
  * it is only a rectangle if it is closed on all four sides
  */
-export default class XYRange implements HasCoordinates, HasRangesXY, IRangeMethods<XY>, Sized, CombinableRange<XY>, Range<XY> {
+export default class XYRange implements HasCoordinates, HasRangesXY, RangeMethods<XY>, Sized, CombinableRange<XY>, Range<XY> {
     /**
      * not sure if there is much purpose in storing the x1s,
      * but it allows for an object to be constructed from another object
@@ -124,5 +122,19 @@ export default class XYRange implements HasCoordinates, HasRangesXY, IRangeMetho
         };
 
         return isInvertedCoords(coords) ? null : new XYRange(coords);
+    }
+}
+
+/**
+ * helper for combine methods, enforces that the object implementing Range<XY> is an XYRange
+ *
+ * interface Range<XY> has a min and max which are each XY or undefined
+ * want to convert to separate rangeX and rangeY
+ */
+export const toXYRange = (range: Range<XY>): XYRange => {
+    if (range instanceof XYRange) {
+        return range;
+    } else {
+        return new XYRange(rangeXYtoCoords(range));
     }
 }

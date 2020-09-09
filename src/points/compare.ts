@@ -1,5 +1,5 @@
-import {isSameValue} from "../sized/compare";
 import {XY} from "../coreTypes";
+import {isSameValue} from "../isSameValue";
 
 /**
  * See if two positions have the same x and y values, with an optional margin to account for rounding errors.

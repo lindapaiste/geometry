@@ -1,5 +1,5 @@
 import {Sized} from "../coreTypes";
-import {isSameValue} from "./compare";
+import {isSameValue} from "../isSameValue";
 
 
 // ----------------------DERIVED PROPERTIES-------------------------- //

@@ -1,5 +1,4 @@
-import {XYRange} from "./index";
-import {Range, Coordinates, XY} from "../coreTypes";
+import {Coordinates, Range, XY} from "../coreTypes";
 
 /**
  * helper method allows accepting partially defined ranges as props by replacing undefined with infinite
@@ -22,20 +21,6 @@ export const numbersToRange = (...numbers: number[]): Range => {
     }
 }
 
-/**
- * helper for combine methods, enforces that the object implementing Range<XY> is an XYRange
- *
- * interface Range<XY> has a min and max which are each XY or undefined
- * want to convert to separate rangeX and rangeY
- */
-export const toXYRange = (range: Range<XY>): XYRange => {
-    if (range instanceof XYRange) {
-        return range;
-    } else {
-        return new XYRange(rangeXYtoCoords(range));
-    }
-}
-
 export const rangeXYtoCoords = (range: Range<XY>): Coordinates => {
     const {min, max} = range;
     // could double check min/max
@@ -45,4 +30,11 @@ export const rangeXYtoCoords = (range: Range<XY>): Coordinates => {
         y1: min.y,
         y2: max.y
     }
+}
+
+/**
+ * returns true if the coordinates have a negative width or height
+ */
+export const isInvertedCoords = ({x1, x2, y1, y2}: Coordinates) => {
+    return x1 > x2 || y1 > y2;
 }

@@ -1,5 +1,6 @@
 import {PropHeight, PropWidth, Sized} from "../coreTypes";
 import {getArea, getAspectRatio, isAspectRatio} from "./compute";
+import {isSameNumber} from "../isSameValue";
 
 
 // ----------------------ARRAY REDUCE-------------------------- //
@@ -52,23 +53,6 @@ export const exceedsEither = (target: Partial<Sized>) => (object: Sized): boolea
        */
 };
 
-// ----------------------ERROR MARGIN HELPERS-------------------------- //
-
-/**
- * allows for either a or b to be undefined, but will return false is either or both are not defined numbers
- */
-export const isSameValue = (a?: number, b?: number, margin: number = 0) => {
-    return a !== undefined && b !== undefined && isSameNumber(a, b, margin);
-}
-
-export const isSameNumber = (a: number, b: number, margin: number = 0) => {
-    return Math.abs(b - a) <= margin;
-}
-
-export const isWithinMargin = (value: number, margin: number) => {
-    return Math.abs(value) <= margin;
-}
-
 // ----------------------COMPARE TWO SIZED OBJECTS-------------------------- //
 
 export const widthDiff = (a: PropWidth, b: PropWidth): number =>
@@ -79,15 +63,19 @@ export const heightDiff = (a: PropHeight, b: PropHeight): number =>
 
 
 export const isSameWidth = (a: PropWidth, b: PropWidth, margin: number = .01): boolean => {
-    return isWithinMargin(widthDiff(a, b), margin);
+    return isSameNumber(a.width, b.width, margin);
 }
 
 export const isSameHeight = (a: PropHeight, b: PropHeight, margin: number = .01): boolean => {
-    return isWithinMargin(heightDiff(a, b), margin);
+    return isSameNumber(a.height, b.height, margin);
 }
 
 export const isSameSize = (a: Sized, b: Sized, margin: number = .01): boolean => {
     return isSameWidth(a, b, margin) && isSameHeight(a, b, margin);
+}
+
+export const isSameArea = (a: Sized, b: Sized, margin: number = .01): boolean => {
+    return isSameNumber(getArea(a), getArea(b), margin);
 }
 
 export const isSameAspectRatio = (a: Sized, b: Sized, margin?: number): boolean => {
@@ -102,9 +90,5 @@ export const isTaller = (current: PropHeight, compareTo: PropHeight): boolean =>
 
 export const isWider = (current: PropWidth, compareTo: PropWidth): boolean =>
     current.width > compareTo.width;
-
-
-export const isLargerArea = (current: Sized, compareTo: Sized): boolean =>
-    isTallerThan(current, compareTo) && isWiderThan(current, compareTo); // needs to include equal
 */
 

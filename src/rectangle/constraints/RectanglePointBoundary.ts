@@ -7,5 +7,5 @@
  */
 export default class RectanglePointBoundary {
 
-    //TODO
+    // TODO
 }
