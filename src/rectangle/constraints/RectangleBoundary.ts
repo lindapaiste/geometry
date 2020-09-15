@@ -1,8 +1,8 @@
 import {RangeMethods} from "../../range";
 import ImmutableRectangle from "../ImmutableRectangle";
-import {Point, Sized} from "../../index";
 import {fits} from "../../sized/compare";
 import {isXName, midpointToSide, oppositePointName} from "../points";
+import {Point, Sized} from "../../coreTypes";
 
 /**
  * an XY Range which can contain or constrain Rectangle objects rather than Points

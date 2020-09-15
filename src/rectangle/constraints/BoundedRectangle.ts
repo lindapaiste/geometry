@@ -1,7 +1,7 @@
 import ImmutableRectangle from "../ImmutableRectangle";
 import {XYRange} from "../../range";
-import {Point, IPointName, IRectanglePoint, XName, YName} from "../../index";
-import {isXName, oppositePointName, midpointToSide} from "../points";
+import {Point} from "../../coreTypes";
+import {isXName, oppositePointName, midpointToSide, IRectanglePoint, XName, YName, IPointName} from "../points";
 /**
  * uses the internal rectangle's functions to execute the move,
  * but first restricts based on boundary
